@@ -14,7 +14,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Unit definitions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/scripts/BaseGame/PathManager.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -99,6 +99,8 @@
       <updated>1763038959064</updated>
       <workItem from="1763038962252" duration="427000" />
       <workItem from="1763378196901" duration="2904000" />
+      <workItem from="1763739925419" duration="8883000" />
+      <workItem from="1763749709167" duration="2432000" />
     </task>
     <servers />
   </component>

@@ -29,6 +29,7 @@ public class EnemySpawner : MonoBehaviour
     private bool isSpawning = false;
     
     private WaveConfiguration currentWave;
+    private List<GameObject> spawnerObjects;
     
     void Awake()
     {
@@ -36,6 +37,23 @@ public class EnemySpawner : MonoBehaviour
             Instance = this;
         else
             Destroy(gameObject);
+    }
+    
+    void Start()
+    {
+        // Find all spawner objects with "Spawner" tag
+        GameObject[] spawners = GameObject.FindGameObjectsWithTag("Spawner");
+        spawnerObjects = new List<GameObject>(spawners);
+        
+        if (spawnerObjects.Count == 0)
+        {
+            Debug.LogError("No spawner objects found with 'Spawner' tag!");
+        }
+        else
+        {
+            Debug.Log($"Found {spawnerObjects.Count} spawner(s)");
+            SpawnEnemy();
+        }
     }
     
     public void StartWave(int waveNumber)
@@ -169,36 +187,45 @@ public class EnemySpawner : MonoBehaviour
     
     void SpawnEnemy()
     {
-        // Choose random enemy type from available types for this wave
-        EnemyType enemyType = currentWave.enemyTypes[Random.Range(0, currentWave.enemyTypes.Count)];
-        
-        // Get appropriate prefab
-        GameObject enemyPrefab = GetEnemyPrefab(enemyType);
-        
-        if (enemyPrefab == null)
+        if (spawnerObjects.Count == 0)
         {
-            Debug.LogError($"Enemy prefab not found for type: {enemyType}");
+            Debug.LogError("No spawner objects available!");
             return;
         }
-        
-        // Get spawn point from PathGenerator
-        Vector2 spawnPos = Vector2.zero;
-        if (PathGenerator.Instance != null)
+
+        // Choose random spawner
+        GameObject spawner = spawnerObjects[Random.Range(0, spawnerObjects.Count)];
+        Vector2 spawnPos = spawner.transform.position;
+
+        // --- NEW: Pick a random prefab from your enemy prefabs ---
+        List<GameObject> allEnemyPrefabs = new List<GameObject>()
         {
-            spawnPos = PathGenerator.Instance.GetRandomSpawnPoint();
-        }
-        
-        // Spawn enemy
-        GameObject enemyObj = Instantiate(enemyPrefab, spawnPos, Quaternion.identity);
+            meleeV1Prefab,
+            tankPrefab,
+            rangedPrefab,
+            meleeV2Prefab
+        };
+
+        GameObject enemyPrefab = allEnemyPrefabs[Random.Range(0, allEnemyPrefabs.Count)];
+
+        // Spawn enemy at spawner position with slight randomization
+        Vector2 randomOffset = Random.insideUnitCircle * 0.5f;
+        GameObject enemyObj = Instantiate(enemyPrefab, spawnPos + randomOffset, Quaternion.identity);
+
+        // Assign stats normally — choose a random enemy type just to satisfy config
         Enemy enemy = enemyObj.GetComponent<Enemy>();
-        
         if (enemy != null)
         {
-            enemy.enemyType = enemyType;
-            ConfigureEnemyStats(enemy, enemyType, currentWave.waveNumber);
+            // Set a fake/random type so stats still work
+            EnemyType randomType = (EnemyType)Random.Range(0, System.Enum.GetValues(typeof(EnemyType)).Length);
+            enemy.enemyType = randomType;
+
+            ConfigureEnemyStats(enemy, randomType, currentWave.waveNumber);
+
             enemiesAlive++;
         }
     }
+
     
     GameObject GetEnemyPrefab(EnemyType type)
     {

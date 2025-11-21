@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class InputManager : MonoBehaviour
 {
@@ -10,6 +11,32 @@ public class InputManager : MonoBehaviour
     
     [Header("Selected Unit")]
     private OfficerUnit selectedUnit;
+    
+    private GameObject[] placementSpots;
+    private Dictionary<GameObject, bool> spotOccupancy = new Dictionary<GameObject, bool>();
+    private Dictionary<GameObject, OfficerUnit> spotUnits = new Dictionary<GameObject, OfficerUnit>();
+    
+    void Start()
+    {
+        // Find all placement spot objects
+        placementSpots = GameObject.FindGameObjectsWithTag("Placements");
+        
+        if (placementSpots.Length == 0)
+        {
+            Debug.LogError("No placement spots found with 'Placements' tag!");
+        }
+        else
+        {
+            Debug.Log($"Found {placementSpots.Length} placement spot(s)");
+            
+            // Initialize occupancy tracking
+            foreach (GameObject spot in placementSpots)
+            {
+                spotOccupancy[spot] = false;
+                spotUnits[spot] = null;
+            }
+        }
+    }
     
     void Update()
     {
@@ -51,17 +78,10 @@ public class InputManager : MonoBehaviour
         selectedUnitType = unitType;
         isPlacingUnit = true;
         
-        // Enable all placement spots
-        PlacementSpot[] spots = FindObjectsOfType<PlacementSpot>();
-        foreach (PlacementSpot spot in spots)
-        {
-            spot.EnablePlacementMode(unitType);
-        }
-        
         // Create ghost unit
         CreateGhostUnit(unitType);
         
-        Debug.Log($"Click a green spot to place {stats.unitName}");
+        Debug.Log($"Click a placement spot to place {stats.unitName}");
     }
     
     void CreateGhostUnit(UnitType unitType)
@@ -105,7 +125,6 @@ public class InputManager : MonoBehaviour
         lineRenderer.endWidth = 0.1f;
         lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
         lineRenderer.startColor = new Color(1, 1, 0, 0.5f);
-        lineRenderer.startColor = new Color(1, 1, 0, 0.5f);
         lineRenderer.endColor = new Color(1, 1, 0, 0.5f);
         lineRenderer.sortingLayerName = "Units";
         lineRenderer.sortingOrder = 99;
@@ -134,22 +153,31 @@ public class InputManager : MonoBehaviour
         ghostUnit.transform.position = mousePos;
         
         // Change color based on valid placement
-        bool isOverValidSpot = IsOverValidPlacementSpot(mousePos);
+        GameObject nearestSpot = GetNearestPlacementSpot(mousePos);
+        bool isOverValidSpot = nearestSpot != null && 
+                               !spotOccupancy[nearestSpot] && 
+                               Vector2.Distance(mousePos, nearestSpot.transform.position) < 1f;
+        
         Color ghostColor = isOverValidSpot ? new Color(0, 1, 0, 0.5f) : new Color(1, 0, 0, 0.5f);
         ghostRenderer.color = ghostColor;
     }
     
-    bool IsOverValidPlacementSpot(Vector3 position)
+    GameObject GetNearestPlacementSpot(Vector3 position)
     {
-        PlacementSpot[] spots = FindObjectsOfType<PlacementSpot>();
-        foreach (PlacementSpot spot in spots)
+        GameObject nearest = null;
+        float nearestDistance = Mathf.Infinity;
+        
+        foreach (GameObject spot in placementSpots)
         {
-            if (!spot.isOccupied && Vector2.Distance(position, spot.transform.position) < 0.5f)
+            float distance = Vector2.Distance(position, spot.transform.position);
+            if (distance < nearestDistance)
             {
-                return true;
+                nearestDistance = distance;
+                nearest = spot;
             }
         }
-        return false;
+        
+        return nearest;
     }
     
     void HandleUnitPlacement()
@@ -168,15 +196,62 @@ public class InputManager : MonoBehaviour
             return;
         }
         
-        // Left click to place (handled by PlacementSpot's OnMouseDown)
+        // Left click to place
         if (isPlacingUnit && Input.GetMouseButtonDown(0))
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            if (IsOverValidPlacementSpot(mousePos))
+            mousePos.z = 0;
+            
+            GameObject nearestSpot = GetNearestPlacementSpot(mousePos);
+            
+            if (nearestSpot != null && 
+                !spotOccupancy[nearestSpot] && 
+                Vector2.Distance(mousePos, nearestSpot.transform.position) < 1f)
             {
-                Invoke(nameof(CleanupAfterPlacement), 0.1f);
+                PlaceUnitAtSpot(nearestSpot);
             }
         }
+    }
+    
+    void PlaceUnitAtSpot(GameObject placementSpot)
+    {
+        UnitStats stats = UnitDefinitions.Instance.GetUnitStats(selectedUnitType);
+        GameObject unitPrefab = UnitDefinitions.Instance.GetUnitPrefab(selectedUnitType);
+        
+        if (unitPrefab == null)
+        {
+            Debug.LogError($"No prefab found for {selectedUnitType}");
+            return;
+        }
+        
+        // Check if can afford
+        if (!GameManager.Instance.CanAfford(stats.cost))
+        {
+            Debug.Log("Not enough money!");
+            CancelPlacement();
+            return;
+        }
+        
+        // Spend money
+        GameManager.Instance.SpendMoney(stats.cost);
+        
+        // Instantiate unit at placement spot
+        GameObject unitObj = Instantiate(unitPrefab, placementSpot.transform.position, Quaternion.identity);
+        OfficerUnit unit = unitObj.GetComponent<OfficerUnit>();
+        
+        if (unit != null)
+        {
+            unit.stats = stats;
+            
+            // Mark spot as occupied
+            spotOccupancy[placementSpot] = true;
+            spotUnits[placementSpot] = unit;
+            
+            Debug.Log($"Placed {stats.unitName} at {placementSpot.name}");
+        }
+        
+        // Cleanup
+        CleanupAfterPlacement();
     }
     
     void CleanupAfterPlacement()
@@ -196,13 +271,6 @@ public class InputManager : MonoBehaviour
         }
         
         isPlacingUnit = false;
-        
-        // Disable all placement spots
-        PlacementSpot[] spots = FindObjectsOfType<PlacementSpot>();
-        foreach (PlacementSpot spot in spots)
-        {
-            spot.DisablePlacementMode();
-        }
         
         Debug.Log("Placement cancelled");
     }
@@ -230,6 +298,20 @@ public class InputManager : MonoBehaviour
     {
         selectedUnit = unit;
         Debug.Log($"Selected: {unit.stats.unitName} - Health: {unit.currentHealth}/{unit.stats.health}");
+    }
+    
+    public void OnUnitDestroyed(OfficerUnit unit)
+    {
+        // Free up the spot when unit dies
+        foreach (var kvp in spotUnits)
+        {
+            if (kvp.Value == unit)
+            {
+                spotOccupancy[kvp.Key] = false;
+                spotUnits[kvp.Key] = null;
+                break;
+            }
+        }
     }
     
     void OnGUI()

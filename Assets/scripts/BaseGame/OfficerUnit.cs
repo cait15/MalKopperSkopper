@@ -20,11 +20,10 @@ public class OfficerUnit : MonoBehaviour
     [Header("References")]
     public SpriteRenderer spriteRenderer;
     public Animator animator;
-    public Transform firePoint; // Where projectiles spawn from (for ranged)
-    public PlacementSpot placementSpot;
+    public Transform firePoint;
     
     [Header("Visual Feedback")]
-    public GameObject healthBarPrefab; // Optional: assign a health bar prefab
+    public GameObject healthBarPrefab;
     private GameObject healthBarInstance;
     
     // For Melee Officer V2
@@ -133,12 +132,6 @@ public class OfficerUnit : MonoBehaviour
         
         // Visual feedback
         StartCoroutine(AttackAnimation());
-        
-        // For ranged units, you could spawn a projectile here
-        if (stats.unitType == UnitType.RangedOfficer)
-        {
-            // TODO: Spawn projectile visual
-        }
     }
     
     IEnumerator AttackAnimation()
@@ -263,9 +256,6 @@ public class OfficerUnit : MonoBehaviour
         dogSprite.color = new Color(0.6f, 0.4f, 0.2f); // Brown color
         dogSprite.sortingOrder = spriteRenderer.sortingOrder;
         
-        //  assign a dog sprite here if you have one
-        // dogSprite.sprite = yourDogSprite;
-        
         Debug.Log($"{stats.unitName} has a dog companion!");
     }
     
@@ -280,7 +270,6 @@ public class OfficerUnit : MonoBehaviour
         if (healthBarInstance != null)
         {
             // Update health bar fill amount
-            // Assuming health bar has a child with Image component
             UnityEngine.UI.Image fillImage = healthBarInstance.GetComponentInChildren<UnityEngine.UI.Image>();
             if (fillImage != null)
             {
@@ -295,15 +284,16 @@ public class OfficerUnit : MonoBehaviour
         isAlive = false;
         GameManager.Instance.UnregisterUnit(this);
         
+        // Notify InputManager to free up the placement spot
+        InputManager inputManager = FindObjectOfType<InputManager>();
+        if (inputManager != null)
+        {
+            inputManager.OnUnitDestroyed(this);
+        }
+        
         if (animator != null)
         {
             animator.SetTrigger("Die");
-        }
-        
-        // Free up the placement spot
-        if (placementSpot != null)
-        {
-            placementSpot.RemoveUnit();
         }
         
         // Death animation
