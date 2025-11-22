@@ -63,10 +63,13 @@ public class HotbarUI : MonoBehaviour
     
     void Update()
     {
-        // Show hotbar only during setup phase
-        gameObject.SetActive(gameManager.currentPhase == GamePhase.Setup);
-        
-        // Update button states
+        // Keep hotbar active all the time, but disable button interactions during non-setup phases
+        // Button interactivity is handled in UpdateVisuals()
+    }
+    
+    public void ForceUpdateAllButtons()
+    {
+        // Called from GameManager every frame
         UpdateAllButtons();
     }
     
@@ -82,7 +85,12 @@ public class HotbarUI : MonoBehaviour
             UnitStats stats = UnitDefinitions.Instance.GetUnitStats(unitType);
             bool canAfford = gameManager.CanAfford(stats.cost);
             
-            button.UpdateVisuals(isUnlocked, canAfford, gameManager.playerMoney);
+            Debug.Log($"[HOTBAR UPDATE] {unitType}: Unlocked={isUnlocked}, CanAfford={canAfford}, Button={button != null}");
+            
+            if (button != null)
+            {
+                button.UpdateVisuals(isUnlocked, canAfford, gameManager.playerMoney);
+            }
         }
         
         // Update buff buttons

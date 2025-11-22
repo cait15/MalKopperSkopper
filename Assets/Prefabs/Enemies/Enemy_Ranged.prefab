@@ -145,7 +145,7 @@ MonoBehaviour:
   speed: 2
   damage: 10
   moneyReward: 50
-  attackRange: 1.5
+  attackRange: 10
   attackCooldown: 1
   isAlive: 1
   spriteRenderer: {fileID: 0}

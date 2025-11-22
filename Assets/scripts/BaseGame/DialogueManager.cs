@@ -77,6 +77,11 @@ public class DialogueManager : MonoBehaviour
         else
         {
             Debug.Log($"No dialogues configured for wave {waveNumber}");
+            // Skip to setup if no dialogue exists
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.OnDialogueEnded();
+            }
         }
     }
     
@@ -221,16 +226,9 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
-            // End of dialogue
-            if (currentNode.isEndDialogue)
-            {
-                CloseDialogue();
-                TriggerNextPhase();
-            }
-            else
-            {
-                CloseDialogue();
-            }
+            // No more dialogue, end the conversation
+            CloseDialogue();
+            TriggerNextPhase();
         }
     }
     
@@ -242,16 +240,10 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
-            // End of dialogue
-            if (choice.isEndDialogue)
-            {
-                CloseDialogue();
-                TriggerNextPhase();
-            }
-            else
-            {
-                CloseDialogue();
-            }
+            // No next node for this choice, end the conversation
+            Debug.Log("Choice has no next node, ending dialogue");
+            CloseDialogue();
+            TriggerNextPhase();
         }
     }
     

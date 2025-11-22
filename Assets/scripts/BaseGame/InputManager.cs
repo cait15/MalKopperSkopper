@@ -37,7 +37,19 @@ public class InputManager : MonoBehaviour
             }
         }
     }
-    
+    public void ClearPlacementForUnit(OfficerUnit unit)
+    {
+        foreach (var kvp in spotUnits)
+        {
+            if (kvp.Value == unit)
+            {
+                spotOccupancy[kvp.Key] = false;
+                spotUnits[kvp.Key] = null;
+                Debug.Log($"Cleared placement spot for dead unit");
+                return;
+            }
+        }
+    }
     void Update()
     {
         // Don't allow input during dialogue or battle phase

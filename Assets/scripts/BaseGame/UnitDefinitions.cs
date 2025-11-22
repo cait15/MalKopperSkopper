@@ -60,7 +60,7 @@ public class UnitDefinitions : MonoBehaviour
                     unitName = "Melee Officer V1",
                     health = 100,
                     speed = 75f,
-                    attackRange = 1.5f,
+                    attackRange = 5f,
                     damage = 10,
                     cost = 500,
                     attackCooldown = 1f
@@ -73,7 +73,7 @@ public class UnitDefinitions : MonoBehaviour
                     unitName = "Tank Officer",
                     health = 150,
                     speed = 25f,
-                    attackRange = 1.5f,
+                    attackRange = 3f,
                     damage = 25,
                     cost = 1000,
                     attackCooldown = 2f
@@ -86,7 +86,7 @@ public class UnitDefinitions : MonoBehaviour
                     unitName = "Ranged Officer",
                     health = 100,
                     speed = 50f,
-                    attackRange = 5f,
+                    attackRange = 6f,
                     damage = 15,
                     cost = 2000,
                     attackCooldown = 1.5f
@@ -99,7 +99,7 @@ public class UnitDefinitions : MonoBehaviour
                     unitName = "Melee Officer V2 (with Dog)",
                     health = 100,
                     speed = 50f,
-                    attackRange = 1.5f,
+                    attackRange = 5f,
                     damage = 10,
                     cost = 1500,
                     attackCooldown = 1f,

@@ -201,21 +201,21 @@ public class Enemy : MonoBehaviour
     void FindNearbyOfficer()
     {
         OfficerUnit[] officers = FindObjectsOfType<OfficerUnit>();
-        float closestDistance = attackRange;
+        float closestDistance = float.MaxValue;  // Changed this line
         OfficerUnit closestOfficer = null;
-        
+    
         foreach (OfficerUnit officer in officers)
         {
             if (!officer.isAlive) continue;
-            
+        
             float distance = Vector2.Distance(transform.position, officer.transform.position);
-            if (distance <= attackRange && distance < closestDistance)
+            if (distance < closestDistance && distance <= attackRange)  // Swapped condition order
             {
                 closestDistance = distance;
                 closestOfficer = officer;
             }
         }
-        
+    
         currentTarget = closestOfficer;
     }
     
@@ -415,7 +415,7 @@ public class Enemy : MonoBehaviour
                 spriteRenderer.color = c;
             }
             
-            transform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, t);
+            transform.localScale = Vector3.Lerp(Vector3.one * 0.05f, Vector3.zero, t);
             
             yield return null;
         }

@@ -11,6 +11,8 @@ public class OfficerUnit : MonoBehaviour
     [Header("Combat")]
     private Enemy currentTarget;
     private float lastAttackTime;
+    private float lastSearchTime;
+    private float searchCooldown = 0.5f;
     
     [Header("Buffs")]
     public int temporaryHealthBonus = 0;
@@ -54,7 +56,11 @@ public class OfficerUnit : MonoBehaviour
         // Find and attack enemies
         if (currentTarget == null || !currentTarget.isAlive)
         {
-            FindNewTarget();
+            if (Time.time - lastSearchTime >= searchCooldown)
+            {
+                FindNewTarget();
+                lastSearchTime = Time.time;
+            }
         }
         
         if (currentTarget != null)
@@ -66,7 +72,7 @@ public class OfficerUnit : MonoBehaviour
     void FindNewTarget()
     {
         Enemy[] enemies = FindObjectsOfType<Enemy>();
-        float closestDistance = Mathf.Infinity;
+        float closestDistance = float.MaxValue;
         Enemy closestEnemy = null;
         
         foreach (Enemy enemy in enemies)
@@ -74,7 +80,7 @@ public class OfficerUnit : MonoBehaviour
             if (!enemy.isAlive) continue;
             
             float distance = Vector2.Distance(transform.position, enemy.transform.position);
-            if (distance <= stats.attackRange && distance < closestDistance)
+            if (distance < closestDistance && distance <= stats.attackRange)
             {
                 closestDistance = distance;
                 closestEnemy = enemy;
@@ -203,6 +209,12 @@ public class OfficerUnit : MonoBehaviour
         isAlive = false;
         GameManager.Instance.UnregisterUnit(this);
         
+        InputManager inputManager = FindObjectOfType<InputManager>();
+        if (inputManager != null)
+        {
+            inputManager.ClearPlacementForUnit(this);
+        }
+        
         if (animator != null)
         {
             animator.SetTrigger("Die");
@@ -235,9 +247,7 @@ public class OfficerUnit : MonoBehaviour
                 c.a = 1f - t;
                 spriteRenderer.color = c;
             }
-            
-            //transform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, t);
-            
+            transform.localScale = Vector3.Lerp(Vector3.one * 0.05f, Vector3.zero, t);
             yield return null;
         }
         

@@ -127,7 +127,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 29.6875
+  m_Radius: 56.3
 --- !u!114 &904565310411911030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -143,10 +143,10 @@ MonoBehaviour:
   stats:
     unitType: 0
     unitName: 
-    health: 0
-    speed: 0
-    attackRange: 0
-    damage: 0
+    health: 100
+    speed: 2
+    attackRange: 3
+    damage: 15
     cost: 0
     attackCooldown: 0
     dogHealth: 0

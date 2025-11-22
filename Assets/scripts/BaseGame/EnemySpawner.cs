@@ -257,9 +257,9 @@ public class EnemySpawner : MonoBehaviour
             case EnemyType.MeleeV1:
                 enemy.health = 50 + (waveNumber * 8);
                 enemy.speed = 3.5f;
-                enemy.damage = 10 + (waveNumber * 2);
+                enemy.damage = 3 + (waveNumber * 2);
                 enemy.moneyReward = 50;
-                enemy.attackRange = 2f;
+                enemy.attackRange = 3.5f;
                 enemy.attackCooldown = 1.2f;
                 break;
                 
@@ -268,7 +268,7 @@ public class EnemySpawner : MonoBehaviour
                 enemy.speed = 2f;
                 enemy.damage = 20 + (waveNumber * 3);
                 enemy.moneyReward = 100;
-                enemy.attackRange = 2f;
+                enemy.attackRange = 3.5f;
                 enemy.attackCooldown = 2f;
                 break;
                 
