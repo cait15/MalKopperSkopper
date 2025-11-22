@@ -27,6 +27,7 @@ public class EnemySpawner : MonoBehaviour
     private int enemiesAlive = 0;
     private int enemiesReachedEnd = 0;
     private bool isSpawning = false;
+    private bool gameOver = false;
     
     private WaveConfiguration currentWave;
     private List<GameObject> spawnerObjects;
@@ -52,13 +53,12 @@ public class EnemySpawner : MonoBehaviour
         else
         {
             Debug.Log($"Found {spawnerObjects.Count} spawner(s)");
-            SpawnEnemy();
         }
     }
     
     public void StartWave(int waveNumber)
     {
-        if (isSpawning) return;
+        if (isSpawning || gameOver) return;
         
         currentWave = GetWaveConfiguration(waveNumber);
         enemiesSpawned = 0;
@@ -176,6 +176,13 @@ public class EnemySpawner : MonoBehaviour
         
         for (int i = 0; i < currentWave.enemyCount; i++)
         {
+            // Stop spawning if game is over
+            if (gameOver)
+            {
+                isSpawning = false;
+                yield break;
+            }
+            
             SpawnEnemy();
             enemiesSpawned++;
             
@@ -197,31 +204,30 @@ public class EnemySpawner : MonoBehaviour
         GameObject spawner = spawnerObjects[Random.Range(0, spawnerObjects.Count)];
         Vector2 spawnPos = spawner.transform.position;
 
-        // --- NEW: Pick a random prefab from your enemy prefabs ---
-        List<GameObject> allEnemyPrefabs = new List<GameObject>()
-        {
-            meleeV1Prefab,
-            tankPrefab,
-            rangedPrefab,
-            meleeV2Prefab
-        };
+        // Choose random enemy type for this wave
+        EnemyType enemyType = currentWave.enemyTypes[
+            Random.Range(0, currentWave.enemyTypes.Count)
+        ];
 
-        GameObject enemyPrefab = allEnemyPrefabs[Random.Range(0, allEnemyPrefabs.Count)];
+        // Get appropriate prefab
+        GameObject enemyPrefab = GetEnemyPrefab(enemyType);
+
+        if (enemyPrefab == null)
+        {
+            Debug.LogError($"Enemy prefab not found for type: {enemyType}");
+            return;
+        }
 
         // Spawn enemy at spawner position with slight randomization
         Vector2 randomOffset = Random.insideUnitCircle * 0.5f;
         GameObject enemyObj = Instantiate(enemyPrefab, spawnPos + randomOffset, Quaternion.identity);
 
-        // Assign stats normally — choose a random enemy type just to satisfy config
         Enemy enemy = enemyObj.GetComponent<Enemy>();
+
         if (enemy != null)
         {
-            // Set a fake/random type so stats still work
-            EnemyType randomType = (EnemyType)Random.Range(0, System.Enum.GetValues(typeof(EnemyType)).Length);
-            enemy.enemyType = randomType;
-
-            ConfigureEnemyStats(enemy, randomType, currentWave.waveNumber);
-
+            enemy.enemyType = enemyType;
+            ConfigureEnemyStats(enemy, enemyType, currentWave.waveNumber);
             enemiesAlive++;
         }
     }
@@ -288,12 +294,16 @@ public class EnemySpawner : MonoBehaviour
     
     public void OnEnemyKilled()
     {
+        if (gameOver) return;
+        
         enemiesAlive--;
         CheckWaveComplete();
     }
     
     public void OnEnemyReachedEnd()
     {
+        if (gameOver) return;
+        
         enemiesAlive--;
         enemiesReachedEnd++;
         CheckWaveComplete();
@@ -310,5 +320,23 @@ public class EnemySpawner : MonoBehaviour
                 GameManager.Instance.OnWaveComplete();
             }
         }
+    }
+    
+    public void OnGameOver()
+    {
+        gameOver = true;
+        isSpawning = false;
+        
+        // Destroy all remaining enemies
+        Enemy[] allEnemies = FindObjectsOfType<Enemy>();
+        foreach (Enemy enemy in allEnemies)
+        {
+            if (enemy != null)
+            {
+                Destroy(enemy.gameObject);
+            }
+        }
+        
+        Debug.Log("Game Over - All enemies deactivated");
     }
 }

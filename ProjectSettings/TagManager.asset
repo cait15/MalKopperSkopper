@@ -11,6 +11,7 @@ TagManager:
   - Spawner
   - Waypoint
   - TowerNode
+  - Barrier
   layers:
   - Default
   - TransparentFX

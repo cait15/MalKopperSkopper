@@ -15,12 +15,10 @@ public class OfficerUnit : MonoBehaviour
     [Header("Buffs")]
     public int temporaryHealthBonus = 0;
     public int temporaryDamageBonus = 0;
-    private float buffEndTime = 0f;
     
     [Header("References")]
     public SpriteRenderer spriteRenderer;
     public Animator animator;
-    public Transform firePoint;
     
     [Header("Visual Feedback")]
     public GameObject healthBarPrefab;
@@ -33,6 +31,12 @@ public class OfficerUnit : MonoBehaviour
     
     void Start()
     {
+        if (stats == null)
+        {
+            Debug.LogError("OfficerUnit has no stats assigned!");
+            return;
+        }
+        
         currentHealth = stats.health;
         GameManager.Instance.RegisterUnit(this);
         
@@ -40,12 +44,6 @@ public class OfficerUnit : MonoBehaviour
         if (stats.unitType == UnitType.MeleeOfficerV2)
         {
             SpawnDogCompanion();
-        }
-        
-        // Setup health bar if prefab exists
-        if (healthBarPrefab != null)
-        {
-            SetupHealthBar();
         }
     }
     
@@ -63,9 +61,6 @@ public class OfficerUnit : MonoBehaviour
         {
             AttackTarget();
         }
-        
-        // Update animations based on state
-        UpdateAnimations();
     }
     
     void FindNewTarget()
@@ -91,19 +86,17 @@ public class OfficerUnit : MonoBehaviour
     
     void AttackTarget()
     {
+        if (currentTarget == null) return;
+        
         // Face the target
-        if (currentTarget != null)
+        Vector2 direction = (currentTarget.transform.position - transform.position).normalized;
+        
+        if (spriteRenderer != null)
         {
-            Vector2 direction = (currentTarget.transform.position - transform.position).normalized;
-            
-            // Flip sprite based on direction
-            if (spriteRenderer != null)
-            {
-                if (direction.x < 0)
-                    spriteRenderer.flipX = true;
-                else if (direction.x > 0)
-                    spriteRenderer.flipX = false;
-            }
+            if (direction.x < 0)
+                spriteRenderer.flipX = true;
+            else if (direction.x > 0)
+                spriteRenderer.flipX = false;
         }
         
         // Attack on cooldown
@@ -121,6 +114,8 @@ public class OfficerUnit : MonoBehaviour
     
     void PerformAttack()
     {
+        if (currentTarget == null || !currentTarget.isAlive) return;
+        
         int totalDamage = stats.damage + temporaryDamageBonus;
         currentTarget.TakeDamage(totalDamage);
         
@@ -136,21 +131,10 @@ public class OfficerUnit : MonoBehaviour
     
     IEnumerator AttackAnimation()
     {
-        // Simple scale animation
         Vector3 originalScale = transform.localScale;
         transform.localScale = originalScale * 1.15f;
         yield return new WaitForSeconds(0.1f);
         transform.localScale = originalScale;
-    }
-    
-    void UpdateAnimations()
-    {
-        if (animator == null) return;
-        
-        // Set animation parameters
-        bool isAttacking = currentTarget != null;
-        animator.SetBool("IsAttacking", isAttacking);
-        animator.SetBool("IsAlive", isAlive);
     }
     
     public void TakeDamage(int damage)
@@ -159,9 +143,6 @@ public class OfficerUnit : MonoBehaviour
         
         // Visual feedback - flash red
         StartCoroutine(DamageFlash());
-        
-        // Update health bar
-        UpdateHealthBar();
         
         if (currentHealth <= 0)
         {
@@ -185,11 +166,7 @@ public class OfficerUnit : MonoBehaviour
         int maxHealth = stats.health + temporaryHealthBonus;
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
         
-        // Visual feedback - flash green
         StartCoroutine(HealFlash());
-        
-        // Update health bar
-        UpdateHealthBar();
         
         Debug.Log($"{stats.unitName} healed for {amount}. Current health: {currentHealth}/{maxHealth}");
     }
@@ -205,78 +182,20 @@ public class OfficerUnit : MonoBehaviour
         }
     }
     
-    public void ApplyTemporaryHealthBuff(int bonus, float duration)
-    {
-        StartCoroutine(TemporaryHealthBonus(bonus, duration));
-    }
-    
-    IEnumerator TemporaryHealthBonus(int bonus, float duration)
-    {
-        temporaryHealthBonus += bonus;
-        currentHealth += bonus;
-        
-        Debug.Log($"{stats.unitName} gained +{bonus} temporary health!");
-        UpdateHealthBar();
-        
-        yield return new WaitForSeconds(duration);
-        
-        temporaryHealthBonus -= bonus;
-        currentHealth = Mathf.Min(currentHealth, stats.health);
-        UpdateHealthBar();
-    }
-    
-    public void ApplyTemporaryDamageBuff(int bonus, float duration)
-    {
-        StartCoroutine(TemporaryDamageBonus(bonus, duration));
-    }
-    
-    IEnumerator TemporaryDamageBonus(int bonus, float duration)
-    {
-        temporaryDamageBonus += bonus;
-        
-        Debug.Log($"{stats.unitName} gained +{bonus} damage!");
-        
-        yield return new WaitForSeconds(duration);
-        
-        temporaryDamageBonus -= bonus;
-    }
-    
     void SpawnDogCompanion()
     {
         hasDog = true;
         dogCurrentHealth = stats.dogHealth;
         
-        // Create a simple dog sprite
         dogCompanion = new GameObject("DogCompanion");
         dogCompanion.transform.parent = transform;
         dogCompanion.transform.localPosition = new Vector3(0.5f, -0.2f, 0);
         
-        // Add sprite renderer
         SpriteRenderer dogSprite = dogCompanion.AddComponent<SpriteRenderer>();
-        dogSprite.color = new Color(0.6f, 0.4f, 0.2f); // Brown color
-        dogSprite.sortingOrder = spriteRenderer.sortingOrder;
+        dogSprite.color = new Color(0.6f, 0.4f, 0.2f);
+        dogSprite.sortingOrder = spriteRenderer != null ? spriteRenderer.sortingOrder : 5;
         
         Debug.Log($"{stats.unitName} has a dog companion!");
-    }
-    
-    void SetupHealthBar()
-    {
-        healthBarInstance = Instantiate(healthBarPrefab, transform.position + Vector3.up * 1.5f, Quaternion.identity, transform);
-        UpdateHealthBar();
-    }
-    
-    void UpdateHealthBar()
-    {
-        if (healthBarInstance != null)
-        {
-            // Update health bar fill amount
-            UnityEngine.UI.Image fillImage = healthBarInstance.GetComponentInChildren<UnityEngine.UI.Image>();
-            if (fillImage != null)
-            {
-                int maxHealth = stats.health + temporaryHealthBonus;
-                fillImage.fillAmount = (float)currentHealth / maxHealth;
-            }
-        }
     }
     
     void Die()
@@ -284,24 +203,24 @@ public class OfficerUnit : MonoBehaviour
         isAlive = false;
         GameManager.Instance.UnregisterUnit(this);
         
-        // Notify InputManager to free up the placement spot
-        InputManager inputManager = FindObjectOfType<InputManager>();
-        if (inputManager != null)
-        {
-            inputManager.OnUnitDestroyed(this);
-        }
-        
         if (animator != null)
         {
             animator.SetTrigger("Die");
         }
         
-        // Death animation
         StartCoroutine(DeathAnimation());
     }
     
     IEnumerator DeathAnimation()
     {
+        // Flash red first
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = Color.red;
+        }
+        yield return new WaitForSeconds(0.1f);
+        
+        // Then fade out
         float duration = 0.5f;
         float elapsed = 0f;
         
@@ -325,18 +244,27 @@ public class OfficerUnit : MonoBehaviour
         Destroy(gameObject);
     }
     
+    public void ApplyTemporaryDamageBuff(int bonus, float duration)
+    {
+        StartCoroutine(TemporaryDamageBonus(bonus, duration));
+    }
+
+    IEnumerator TemporaryDamageBonus(int bonus, float duration)
+    {
+        temporaryDamageBonus += bonus;
+    
+        Debug.Log($"{stats.unitName} gained +{bonus} damage!");
+    
+        yield return new WaitForSeconds(duration);
+    
+        temporaryDamageBonus -= bonus;
+    }
+    
     void OnDestroy()
     {
         if (GameManager.Instance != null)
         {
             GameManager.Instance.UnregisterUnit(this);
         }
-    }
-    
-    // Helper method to visualize attack range in editor
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, stats != null ? stats.attackRange : 2f);
     }
 }

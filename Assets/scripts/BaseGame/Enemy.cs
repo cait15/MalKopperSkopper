@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq; // Required for LINQ usage
+using System.Linq;
 
 public enum EnemyType
 {
@@ -30,7 +30,6 @@ public class Enemy : MonoBehaviour
     private float lastAttackTime;
     
     [Header("Combat")]
-    // NOTE: Replace OfficerUnit with your actual unit script if the name is different
     private OfficerUnit currentTarget; 
     
     [Header("References")]
@@ -39,15 +38,12 @@ public class Enemy : MonoBehaviour
     
     private GameObject towerTarget;
 
-    // --- A* PATHFINDING VARIABLES ---
-    private List<PathNode> pathNodeList; // The shortest path sequence calculated by A*
+    private List<PathNode> pathNodeList;
     private int currentPathIndex = 0;
-    private const float nodeThreshold = 0.1f; // How close enemy must get to the node
-    private PathNode currentTargetNode; // The node we are currently moving toward
-    private PathNode towerNode; // The PathNode object closest to the Tower
-    // --------------------------------
+    private const float nodeThreshold = 0.1f;
+    private PathNode currentTargetNode;
+    private PathNode towerNode;
 
-    // For MeleeV2WithDog
     private GameObject dogCompanion;
     private SpriteRenderer dogSprite;
     private int dogHealth;
@@ -57,14 +53,15 @@ public class Enemy : MonoBehaviour
     {
         currentHealth = health;
         
-        // Find the tower target object (for final movement/damage)
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponent<SpriteRenderer>();
+        
         towerTarget = GameObject.FindGameObjectWithTag("Tower");
         if (towerTarget == null)
         {
             Debug.LogError("No tower found with 'Tower' tag!");
         }
 
-        // Find the final PathNode near the tower
         GameObject towerNodeObject = GameObject.FindGameObjectWithTag("TowerNode");
         if (towerNodeObject != null)
         {
@@ -72,15 +69,13 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            Debug.LogError("TowerNode object with PathNode script and 'TowerNode' tag not found. Pathfinding will fail.");
+            Debug.LogError("TowerNode object with PathNode script and 'TowerNode' tag not found.");
         }
 
-        // --- A* PATH CALCULATION ---
         PathNode startNode = FindNearestStartNode();
         
         if (startNode != null && towerNode != null)
         {
-            // Calculate the full shortest path using A*
             pathNodeList = AStarPathfinder.FindPath(startNode, towerNode);
 
             if (pathNodeList != null && pathNodeList.Count > 0)
@@ -88,9 +83,7 @@ public class Enemy : MonoBehaviour
                 currentTargetNode = pathNodeList[currentPathIndex];
             }
         }
-        // ---------------------------
         
-        // Setup dog for MeleeV2
         if (enemyType == EnemyType.MeleeV2WithDog)
         {
             SpawnDogCompanion();
@@ -98,7 +91,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // Finds the PathNode closest to the enemy's spawn position
     private PathNode FindNearestStartNode()
     {
         PathNode[] allNodes = FindObjectsOfType<PathNode>();
@@ -121,7 +113,6 @@ public class Enemy : MonoBehaviour
     {
         if (!isAlive) return;
         
-        // Check for nearby officers to attack
         if (currentTarget == null || !currentTarget.isAlive)
         {
             FindNearbyOfficer();
@@ -129,31 +120,25 @@ public class Enemy : MonoBehaviour
         
         if (currentTarget != null)
         {
-            // Enemy stops and attacks the officer
             AttackOfficer();
         }
         else
         {
-            // Enemy moves along the calculated A* path
             MoveAlongPath();
         }
     }
     
-    // The core movement loop, replacing the old MoveTowardsTower()
     void MoveAlongPath()
     {
         if (currentTargetNode == null)
         {
-            // If the path is complete (currentTargetNode is null), move directly to the tower
             MoveTowardsTowerFinalStep(); 
             return;
         }
 
-        // Move towards the current target node
         Vector2 direction = (currentTargetNode.WorldPosition - transform.position).normalized;
         transform.position += (Vector3)direction * speed * Time.deltaTime;
         
-        // Flip sprite based on direction
         if (spriteRenderer != null)
         {
             if (direction.x < 0)
@@ -162,19 +147,16 @@ public class Enemy : MonoBehaviour
                 spriteRenderer.flipX = false;
         }
         
-        // Check if reached current node
         if (Vector2.Distance(transform.position, currentTargetNode.WorldPosition) < nodeThreshold)
         {
             currentPathIndex++;
             
             if (pathNodeList != null && currentPathIndex < pathNodeList.Count)
             {
-                // Move to the next node in the calculated A* path
                 currentTargetNode = pathNodeList[currentPathIndex];
             }
             else
             {
-                // Path is finished (reached the TowerNode), now head to the actual Tower
                 currentTargetNode = null;
             }
         }
@@ -185,7 +167,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // Handles the final step toward the actual Tower object
     void MoveTowardsTowerFinalStep()
     {
         if (towerTarget == null)
@@ -197,21 +178,19 @@ public class Enemy : MonoBehaviour
         Vector2 direction = (towerTarget.transform.position - transform.position).normalized;
         transform.position += (Vector3)direction * speed * Time.deltaTime;
 
-        // Check if reached tower
         if (Vector2.Distance(transform.position, towerTarget.transform.position) < 1f)
         {
             ReachTower();
         }
     }
     
-    // NOTE: This can be called after an ally is defeated to find a new path
     void RecalculatePath()
     {
         PathNode startNode = FindNearestStartNode();
         if (startNode != null && towerNode != null)
         {
             pathNodeList = AStarPathfinder.FindPath(startNode, towerNode);
-            currentPathIndex = 0; // Reset index for the new path
+            currentPathIndex = 0;
             if (pathNodeList != null && pathNodeList.Count > 0)
             {
                 currentTargetNode = pathNodeList[currentPathIndex];
@@ -219,10 +198,8 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // --- COMBAT LOGIC (Remains the same) ---
     void FindNearbyOfficer()
     {
-        // NOTE: Ensure OfficerUnit script exists
         OfficerUnit[] officers = FindObjectsOfType<OfficerUnit>();
         float closestDistance = attackRange;
         OfficerUnit closestOfficer = null;
@@ -244,7 +221,6 @@ public class Enemy : MonoBehaviour
     
     void AttackOfficer()
     {
-        // Face the target
         if (currentTarget != null)
         {
             Vector2 direction = (currentTarget.transform.position - transform.position).normalized;
@@ -258,7 +234,6 @@ public class Enemy : MonoBehaviour
             }
         }
         
-        // Attack on cooldown
         if (Time.time - lastAttackTime >= attackCooldown)
         {
             PerformAttack();
@@ -270,7 +245,7 @@ public class Enemy : MonoBehaviour
     {
         if (currentTarget != null && currentTarget.isAlive)
         {
-            // currentTarget.TakeDamage(damage); 
+            currentTarget.TakeDamage(damage); 
             
             if (animator != null)
             {
@@ -295,7 +270,6 @@ public class Enemy : MonoBehaviour
     
     public void TakeDamage(int damageAmount)
     {
-        // If has dog and dog is alive, dog takes damage first
         if (enemyType == EnemyType.MeleeV2WithDog && dogAlive)
         {
             dogHealth -= damageAmount;
@@ -346,7 +320,7 @@ public class Enemy : MonoBehaviour
             Color originalColor = dogSprite.color;
             dogSprite.color = Color.red;
             yield return new WaitForSeconds(0.1f);
-            spriteRenderer.color = originalColor;
+            dogSprite.color = originalColor;
         }
     }
     
@@ -418,6 +392,14 @@ public class Enemy : MonoBehaviour
     
     IEnumerator DeathAnimation()
     {
+        // Flash red first
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = Color.red;
+        }
+        yield return new WaitForSeconds(0.1f);
+        
+        // Then fade out
         float duration = 0.4f;
         float elapsed = 0f;
         
@@ -434,6 +416,7 @@ public class Enemy : MonoBehaviour
             }
             
             transform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, t);
+            
             yield return null;
         }
         

@@ -6,7 +6,8 @@ public enum GamePhase
     Dialogue,
     Setup,
     Battle,
-    Victory
+    Victory,
+    Defeat
 }
 
 public class GameManager : MonoBehaviour
@@ -58,13 +59,15 @@ public class GameManager : MonoBehaviour
         // Unlock first unit immediately
         unlockedUnits.Add(UnitType.MeleeOfficerV1);
         
-        // Start with wave 1 dialogue
+        Debug.Log("Game initialized. Starting Wave 1 Dialogue...");
         StartDialoguePhase(1);
     }
     
     void Update()
     {
-        // Don't update phases if dialogue is active
+        if (isGameOver) return;
+        
+        // Don't process phases while waiting for dialogue
         if (waitingForDialogue) return;
         
         switch (currentPhase)
@@ -104,7 +107,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            // If no dialogue manager, skip to setup
             Debug.LogWarning("No DialogueManager found! Skipping to setup phase.");
             OnDialogueEnded();
         }
@@ -146,7 +148,6 @@ public class GameManager : MonoBehaviour
         Debug.Log("=== BATTLE PHASE ===");
         Debug.Log("Defend your tower!");
         
-        // Start wave
         StartWave();
     }
     
@@ -162,10 +163,8 @@ public class GameManager : MonoBehaviour
         currentWave++;
         waveInProgress = true;
         
-        // Unlock units every 2 waves
         UnlockUnitsForWave(currentWave);
         
-        // Start spawning enemies
         if (EnemySpawner.Instance != null)
         {
             EnemySpawner.Instance.StartWave(currentWave);
@@ -182,21 +181,21 @@ public class GameManager : MonoBehaviour
                 if (!unlockedUnits.Contains(UnitType.TankOfficer))
                 {
                     unlockedUnits.Add(UnitType.TankOfficer);
-                    Debug.Log("Tank Officer Unlocked!");
+                    Debug.Log("🔓 Tank Officer Unlocked!");
                 }
                 break;
-            case 4:
+            case 3:
                 if (!unlockedUnits.Contains(UnitType.RangedOfficer))
                 {
                     unlockedUnits.Add(UnitType.RangedOfficer);
-                    Debug.Log("Ranged Officer Unlocked!");
+                    Debug.Log("🔓 Ranged Officer Unlocked!");
                 }
                 break;
             case 6:
                 if (!unlockedUnits.Contains(UnitType.MeleeOfficerV2))
                 {
                     unlockedUnits.Add(UnitType.MeleeOfficerV2);
-                    Debug.Log("Melee Officer V2 (with Dog) Unlocked!");
+                    Debug.Log("🔓 Melee Officer V2 (with Dog) Unlocked!");
                 }
                 break;
         }
@@ -205,6 +204,7 @@ public class GameManager : MonoBehaviour
     // === VICTORY PHASE ===
     public void OnWaveComplete()
     {
+        if (isGameOver) return;  
         waveInProgress = false;
         
         Debug.Log($"Wave {currentWave} completed!");
@@ -234,10 +234,13 @@ public class GameManager : MonoBehaviour
         
         if (phaseTimer <= 0)
         {
-            // Move to next wave's dialogue
             if (currentWave < totalWaves)
             {
                 StartDialoguePhase(currentWave + 1);
+            }
+            else
+            {
+                GameWon();
             }
         }
     }
@@ -257,12 +260,12 @@ public class GameManager : MonoBehaviour
     void GameOver()
     {
         isGameOver = true;
-        currentPhase = GamePhase.Battle;
+        currentPhase = GamePhase.Defeat; 
+      
         
         Debug.Log("=== GAME OVER ===");
         Debug.Log("Your tower was destroyed!");
         
-        // Show defeat dialogue
         if (DialogueManager.Instance != null)
         {
             DialogueManager.Instance.ShowDefeatDialogue();
@@ -275,7 +278,6 @@ public class GameManager : MonoBehaviour
         Debug.Log($"All {totalWaves} waves completed! Tower health: {playerHealth}");
         currentPhase = GamePhase.Victory;
         
-        // Show victory dialogue
         if (DialogueManager.Instance != null)
         {
             DialogueManager.Instance.ShowVictoryDialogue();
@@ -333,7 +335,7 @@ public class GameManager : MonoBehaviour
         switch (currentPhase)
         {
             case GamePhase.Dialogue:
-                phaseText = "DIALOGUE";
+                phaseText = "DIALOGUE PHASE";
                 phaseColor = Color.cyan;
                 break;
             case GamePhase.Setup:
@@ -348,6 +350,10 @@ public class GameManager : MonoBehaviour
                 phaseText = "VICTORY!";
                 phaseColor = Color.yellow;
                 break;
+            case GamePhase.Defeat:
+                phaseText = "DEFEAT!";
+                phaseColor = Color.yellow;
+                break;
         }
         
         GUI.backgroundColor = phaseColor;
@@ -360,54 +366,10 @@ public class GameManager : MonoBehaviour
         GUI.Label(new Rect(10, 90, 300, 30), $"Money: R{playerMoney}");
         GUI.Label(new Rect(10, 120, 300, 30), $"Wave: {currentWave}/{totalWaves}");
         
-        // Controls based on phase
+        // Setup phase hint
         if (currentPhase == GamePhase.Setup)
         {
-            GUI.Label(new Rect(10, 170, 400, 30), "=== SETUP PHASE ===");
-            GUI.Label(new Rect(10, 195, 400, 30), "Click unit buttons to place units");
-            GUI.Label(new Rect(10, 220, 400, 30), "Press ENTER to skip setup");
-            
-            // Show unlocked units
-            int yOffset = 260;
-            if (unlockedUnits.Contains(UnitType.MeleeOfficerV1))
-            {
-                if (GUI.Button(new Rect(10, yOffset, 200, 30), "Melee Officer V1 (R500)"))
-                {
-                    FindObjectOfType<InputManager>().StartPlacingUnit(UnitType.MeleeOfficerV1);
-                }
-                yOffset += 35;
-            }
-            
-            if (unlockedUnits.Contains(UnitType.TankOfficer))
-            {
-                if (GUI.Button(new Rect(10, yOffset, 200, 30), "Tank Officer (R1000)"))
-                {
-                    FindObjectOfType<InputManager>().StartPlacingUnit(UnitType.TankOfficer);
-                }
-                yOffset += 35;
-            }
-            
-            if (unlockedUnits.Contains(UnitType.RangedOfficer))
-            {
-                if (GUI.Button(new Rect(10, yOffset, 200, 30), "Ranged Officer (R2000)"))
-                {
-                    FindObjectOfType<InputManager>().StartPlacingUnit(UnitType.RangedOfficer);
-                }
-                yOffset += 35;
-            }
-            
-            if (unlockedUnits.Contains(UnitType.MeleeOfficerV2))
-            {
-                if (GUI.Button(new Rect(10, yOffset, 200, 30), "Melee V2 + Dog (R1500)"))
-                {
-                    FindObjectOfType<InputManager>().StartPlacingUnit(UnitType.MeleeOfficerV2);
-                }
-            }
-        }
-        else if (currentPhase == GamePhase.Battle)
-        {
-            GUI.Label(new Rect(10, 170, 400, 30), "=== BATTLE IN PROGRESS ===");
-            GUI.Label(new Rect(10, 195, 400, 30), "Defend your tower!");
+            GUI.Label(new Rect(10, 170, 400, 30), "Press ENTER to skip setup");
         }
         
         // Game Over
