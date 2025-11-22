@@ -236,7 +236,7 @@ public class OfficerUnit : MonoBehaviour
                 spriteRenderer.color = c;
             }
             
-            transform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, t);
+            //transform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, t);
             
             yield return null;
         }

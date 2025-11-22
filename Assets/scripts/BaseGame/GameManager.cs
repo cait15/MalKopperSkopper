@@ -181,21 +181,21 @@ public class GameManager : MonoBehaviour
                 if (!unlockedUnits.Contains(UnitType.TankOfficer))
                 {
                     unlockedUnits.Add(UnitType.TankOfficer);
-                    Debug.Log("🔓 Tank Officer Unlocked!");
+                    Debug.Log(" Tank Officer Unlocked!");
                 }
                 break;
             case 3:
                 if (!unlockedUnits.Contains(UnitType.RangedOfficer))
                 {
                     unlockedUnits.Add(UnitType.RangedOfficer);
-                    Debug.Log("🔓 Ranged Officer Unlocked!");
+                    Debug.Log(" Ranged Officer Unlocked!");
                 }
                 break;
             case 6:
                 if (!unlockedUnits.Contains(UnitType.MeleeOfficerV2))
                 {
                     unlockedUnits.Add(UnitType.MeleeOfficerV2);
-                    Debug.Log("🔓 Melee Officer V2 (with Dog) Unlocked!");
+                    Debug.Log(" Melee Officer V2 (with Dog) Unlocked!");
                 }
                 break;
         }
