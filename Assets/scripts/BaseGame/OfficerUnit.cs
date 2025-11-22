@@ -26,7 +26,6 @@ public class OfficerUnit : MonoBehaviour
     public GameObject healthBarPrefab;
     private GameObject healthBarInstance;
     
-    // For Melee Officer V2
     private GameObject dogCompanion;
     private int dogCurrentHealth;
     private bool hasDog = false;
@@ -42,7 +41,6 @@ public class OfficerUnit : MonoBehaviour
         currentHealth = stats.health;
         GameManager.Instance.RegisterUnit(this);
         
-        // Create dog companion for MeleeOfficerV2
         if (stats.unitType == UnitType.MeleeOfficerV2)
         {
             SpawnDogCompanion();
@@ -53,7 +51,6 @@ public class OfficerUnit : MonoBehaviour
     {
         if (!isAlive) return;
         
-        // Find and attack enemies
         if (currentTarget == null || !currentTarget.isAlive)
         {
             if (Time.time - lastSearchTime >= searchCooldown)
@@ -79,7 +76,7 @@ public class OfficerUnit : MonoBehaviour
         {
             if (!enemy.isAlive) continue;
             
-            float distance = Vector2.Distance(transform.position, enemy.transform.position);
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
             if (distance < closestDistance && distance <= stats.attackRange)
             {
                 closestDistance = distance;
@@ -94,8 +91,7 @@ public class OfficerUnit : MonoBehaviour
     {
         if (currentTarget == null) return;
         
-        // Face the target
-        Vector2 direction = (currentTarget.transform.position - transform.position).normalized;
+        Vector3 direction = (currentTarget.transform.position - transform.position).normalized;
         
         if (spriteRenderer != null)
         {
@@ -105,10 +101,9 @@ public class OfficerUnit : MonoBehaviour
                 spriteRenderer.flipX = false;
         }
         
-        // Attack on cooldown
         if (Time.time - lastAttackTime >= stats.attackCooldown)
         {
-            float distance = Vector2.Distance(transform.position, currentTarget.transform.position);
+            float distance = Vector3.Distance(transform.position, currentTarget.transform.position);
             
             if (distance <= stats.attackRange)
             {
@@ -125,13 +120,11 @@ public class OfficerUnit : MonoBehaviour
         int totalDamage = stats.damage + temporaryDamageBonus;
         currentTarget.TakeDamage(totalDamage);
         
-        // Trigger attack animation
         if (animator != null)
         {
             animator.SetTrigger("Attack");
         }
         
-        // Visual feedback
         StartCoroutine(AttackAnimation());
     }
     
@@ -147,7 +140,6 @@ public class OfficerUnit : MonoBehaviour
     {
         currentHealth -= damage;
         
-        // Visual feedback - flash red
         StartCoroutine(DamageFlash());
         
         if (currentHealth <= 0)
@@ -195,7 +187,7 @@ public class OfficerUnit : MonoBehaviour
         
         dogCompanion = new GameObject("DogCompanion");
         dogCompanion.transform.parent = transform;
-        dogCompanion.transform.localPosition = new Vector3(0.5f, -0.2f, 0);
+        dogCompanion.transform.localPosition = new Vector3(0.5f, 0, -0.2f);
         
         SpriteRenderer dogSprite = dogCompanion.AddComponent<SpriteRenderer>();
         dogSprite.color = new Color(0.6f, 0.4f, 0.2f);
@@ -225,14 +217,12 @@ public class OfficerUnit : MonoBehaviour
     
     IEnumerator DeathAnimation()
     {
-        // Flash red first
         if (spriteRenderer != null)
         {
             spriteRenderer.color = Color.red;
         }
         yield return new WaitForSeconds(0.1f);
         
-        // Then fade out
         float duration = 0.5f;
         float elapsed = 0f;
         
@@ -262,11 +252,8 @@ public class OfficerUnit : MonoBehaviour
     IEnumerator TemporaryDamageBonus(int bonus, float duration)
     {
         temporaryDamageBonus += bonus;
-    
         Debug.Log($"{stats.unitName} gained +{bonus} damage!");
-    
         yield return new WaitForSeconds(duration);
-    
         temporaryDamageBonus -= bonus;
     }
     

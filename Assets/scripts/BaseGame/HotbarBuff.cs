@@ -1,8 +1,10 @@
+
+
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
-
+// ===== HOTBAR BUFF BUTTON =====
 public class HotbarBuffButton : MonoBehaviour
 {
     [Header("UI References")]
@@ -53,7 +55,6 @@ public class HotbarBuffButton : MonoBehaviour
         
         button.interactable = unlocked;
         
-        // Swap icon sprite
         if (iconImage != null)
         {
             iconImage.sprite = unlocked ? unlockedSprite : lockedSprite;

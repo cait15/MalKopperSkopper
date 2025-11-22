@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f68c4f69be7f8f14a849dca3c9a9d1b1, type: 3}
+  m_Script: {fileID: 11500000, guid: e2da890fac7ad5e4486ef666036e28ca, type: 3}
   m_Name: CHoice one 2
   m_EditorClassIdentifier: Assembly-CSharp::DialogueChoice
-  choiceText: choice three
-  nextNode: {fileID: 11400000, guid: f859792a72caba74095e0a5056d97dd4, type: 2}
+  choiceText: ASS
+  nextNode: {fileID: 11400000, guid: b69d0c8d8db27c94c9a60426da7ec19d, type: 2}
   isEndDialogue: 0

@@ -9,16 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29b158e03586f3446abebe81fc278675, type: 3}
+  m_Script: {fileID: 11500000, guid: ec02e0ab42e53de4b9785d62f88c63fa, type: 3}
   m_Name: Victory
   m_EditorClassIdentifier: Assembly-CSharp::DialogueNode
-  dialogueText: 'Hell yeah
-
+  dialogueText: 'AOFDIOHF
 
 '
-  characterName: Cait
+  characterName: 
   choices: []
   nextDefaultNode: {fileID: 0}
-  animatedSprites: []
+  animatedSprites:
+  - {fileID: 21300000, guid: a74c20c949163784f9a4144322841e64, type: 3}
   animationSpeed: 0.75
-  isEndDialogue: 1
+  isEndDialogue: 0

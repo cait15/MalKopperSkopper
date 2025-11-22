@@ -42,7 +42,6 @@ public class HotbarUI : MonoBehaviour
     
     void SetupButtonMap()
     {
-        // Unit buttons
         buttonMap[UnitType.MeleeOfficerV1] = meleeOfficerV1Button;
         buttonMap[UnitType.TankOfficer] = tankOfficerButton;
         buttonMap[UnitType.RangedOfficer] = rangedOfficerButton;
@@ -53,7 +52,6 @@ public class HotbarUI : MonoBehaviour
         rangedOfficerButton.Initialize(UnitType.RangedOfficer, OnUnitSelected);
         meleeOfficerV2Button.Initialize(UnitType.MeleeOfficerV2, OnUnitSelected);
         
-        // Buff buttons
         buffMap[BuffType.AttackBuff] = attackBuffButton;
         buffMap[BuffType.HealBuff] = healBuffButton;
         
@@ -63,19 +61,15 @@ public class HotbarUI : MonoBehaviour
     
     void Update()
     {
-        // Keep hotbar active all the time, but disable button interactions during non-setup phases
-        // Button interactivity is handled in UpdateVisuals()
     }
     
     public void ForceUpdateAllButtons()
     {
-        // Called from GameManager every frame
         UpdateAllButtons();
     }
     
     void UpdateAllButtons()
     {
-        // Update unit buttons
         foreach (var kvp in buttonMap)
         {
             UnitType unitType = kvp.Key;
@@ -85,20 +79,15 @@ public class HotbarUI : MonoBehaviour
             UnitStats stats = UnitDefinitions.Instance.GetUnitStats(unitType);
             bool canAfford = gameManager.CanAfford(stats.cost);
             
-            Debug.Log($"[HOTBAR UPDATE] {unitType}: Unlocked={isUnlocked}, CanAfford={canAfford}, Button={button != null}");
-            
             if (button != null)
             {
                 button.UpdateVisuals(isUnlocked, canAfford, gameManager.playerMoney);
             }
         }
         
-        // Update buff buttons
-        // Attack Buff unlocks at Wave 3
         bool attackBuffUnlocked = gameManager.currentWave >= 3;
         attackBuffButton.UpdateVisuals(attackBuffUnlocked);
         
-        // Heal Buff unlocks at Wave 4
         bool healBuffUnlocked = gameManager.currentWave >= 4;
         healBuffButton.UpdateVisuals(healBuffUnlocked);
     }

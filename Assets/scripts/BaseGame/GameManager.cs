@@ -62,10 +62,8 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // Update UI every frame so timer displays correctly
         UpdateUI();
         
-        // Force update hotbar buttons even when hidden
         if (hotbarUI != null)
         {
             hotbarUI.ForceUpdateAllButtons();
@@ -73,7 +71,6 @@ public class GameManager : MonoBehaviour
         
         if (isGameOver) return;
 
-        // Don't process phases while waiting for dialogue
         if (waitingForDialogue) return;
 
         switch (currentPhase)
@@ -91,7 +88,6 @@ public class GameManager : MonoBehaviour
                 break;
         }
 
-        // Manual phase skip for testing
         if (Input.GetKeyDown(KeyCode.Return) && currentPhase == GamePhase.Setup)
         {
             Debug.Log("Skipping setup phase...");
@@ -134,14 +130,12 @@ public class GameManager : MonoBehaviour
         isGameOver = false;
         currentPhase = GamePhase.Dialogue;
 
-        // Unlock first unit immediately
         unlockedUnits.Add(UnitType.MeleeOfficerV1);
 
         Debug.Log("Game initialized. Starting Wave 1 Dialogue...");
         StartDialoguePhase(1);
     }
 
-    // === DIALOGUE PHASE ===
     void StartDialoguePhase(int waveNumber)
     {
         currentPhase = GamePhase.Dialogue;
@@ -165,13 +159,11 @@ public class GameManager : MonoBehaviour
         waitingForDialogue = false;
         Debug.Log("Dialogue ended, moving to setup phase");
         
-        // Unlock units for next wave BEFORE setup phase starts
         UnlockUnitsForWave(currentWave + 1);
         
         StartSetupPhase();
     }
 
-    // === SETUP PHASE ===
     void StartSetupPhase()
     {
         UpdateUI();
@@ -192,7 +184,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // === BATTLE PHASE ===
     void StartBattlePhase()
     {
         currentPhase = GamePhase.Battle;
@@ -274,13 +265,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // === VICTORY PHASE ===
     public void OnWaveComplete()
     {
         if (isGameOver) return;
         waveInProgress = false;
 
-        // Give money reward for completing wave
         AddMoney(moneyPerWaveComplete);
 
         Debug.Log($"Wave {currentWave} completed!");
@@ -321,7 +310,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // === GAME END ===
     public void TakeDamage(int damage)
     {
         playerHealth -= damage;
@@ -348,7 +336,6 @@ public class GameManager : MonoBehaviour
         Debug.Log("=== GAME OVER ===");
         Debug.Log("Your tower was destroyed!");
         
-        // Stop enemies and timer
         if (EnemySpawner.Instance != null)
         {
             EnemySpawner.Instance.OnGameOver();
@@ -377,7 +364,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // === UTILITY ===
     public bool CanAfford(int cost)
     {
         return playerMoney >= cost;

@@ -9,11 +9,11 @@ public static class AStarPathfinder
     {
         if (startNode == null || endNode == null) return null;
 
-        // 1. Setup Open and Closed Lists
+        //  Setup Open and Closed Lists
         List<PathNode> openList = new List<PathNode> { startNode };
         List<PathNode> closedList = new List<PathNode>();
 
-        // 2. Initialize Costs
+        //  Initialize Costs
         foreach (var node in GameObject.FindObjectsOfType<PathNode>())
         {
             node.G_Cost = float.MaxValue;
@@ -24,7 +24,7 @@ public static class AStarPathfinder
         startNode.H_Cost = CalculateDistanceCost(startNode, endNode);
         startNode.F_Cost = startNode.H_Cost;
 
-        // 3. Main A* Loop
+        //  Main A* Loop
         while (openList.Count > 0)
         {
             PathNode currentNode = GetLowestFCostNode(openList);
@@ -42,7 +42,7 @@ public static class AStarPathfinder
             {
                 if (neighbor == null || closedList.Contains(neighbor)) continue;
 
-                // 4. Calculate Tentative G Cost
+                //  Calculate Tentative G Cost
                 float tentativeGCost = currentNode.G_Cost + CalculateDistanceCost(currentNode, neighbor);
                 
                 if (tentativeGCost < neighbor.G_Cost)

@@ -136,8 +136,8 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        Vector2 direction = (currentTargetNode.WorldPosition - transform.position).normalized;
-        transform.position += (Vector3)direction * speed * Time.deltaTime;
+        Vector3 direction = (currentTargetNode.WorldPosition - transform.position).normalized;
+        transform.position += direction * speed * Time.deltaTime;
         
         if (spriteRenderer != null)
         {
@@ -147,7 +147,7 @@ public class Enemy : MonoBehaviour
                 spriteRenderer.flipX = false;
         }
         
-        if (Vector2.Distance(transform.position, currentTargetNode.WorldPosition) < nodeThreshold)
+        if (Vector3.Distance(transform.position, currentTargetNode.WorldPosition) < nodeThreshold)
         {
             currentPathIndex++;
             
@@ -175,10 +175,10 @@ public class Enemy : MonoBehaviour
             return;
         }
         
-        Vector2 direction = (towerTarget.transform.position - transform.position).normalized;
-        transform.position += (Vector3)direction * speed * Time.deltaTime;
+        Vector3 direction = (towerTarget.transform.position - transform.position).normalized;
+        transform.position += direction * speed * Time.deltaTime;
 
-        if (Vector2.Distance(transform.position, towerTarget.transform.position) < 1f)
+        if (Vector3.Distance(transform.position, towerTarget.transform.position) < 1f)
         {
             ReachTower();
         }
@@ -201,15 +201,15 @@ public class Enemy : MonoBehaviour
     void FindNearbyOfficer()
     {
         OfficerUnit[] officers = FindObjectsOfType<OfficerUnit>();
-        float closestDistance = float.MaxValue;  // Changed this line
+        float closestDistance = float.MaxValue;
         OfficerUnit closestOfficer = null;
     
         foreach (OfficerUnit officer in officers)
         {
             if (!officer.isAlive) continue;
         
-            float distance = Vector2.Distance(transform.position, officer.transform.position);
-            if (distance < closestDistance && distance <= attackRange)  // Swapped condition order
+            float distance = Vector3.Distance(transform.position, officer.transform.position);
+            if (distance < closestDistance && distance <= attackRange)
             {
                 closestDistance = distance;
                 closestOfficer = officer;
@@ -223,7 +223,7 @@ public class Enemy : MonoBehaviour
     {
         if (currentTarget != null)
         {
-            Vector2 direction = (currentTarget.transform.position - transform.position).normalized;
+            Vector3 direction = (currentTarget.transform.position - transform.position).normalized;
             
             if (spriteRenderer != null)
             {
@@ -330,7 +330,7 @@ public class Enemy : MonoBehaviour
         
         dogCompanion = new GameObject("Dog");
         dogCompanion.transform.parent = transform;
-        dogCompanion.transform.localPosition = new Vector3(0.6f, -0.3f, 0);
+        dogCompanion.transform.localPosition = new Vector3(0.6f, 0, -0.3f);
         dogCompanion.transform.localScale = new Vector3(0.6f, 0.6f, 1f);
         
         dogSprite = dogCompanion.AddComponent<SpriteRenderer>();
@@ -392,14 +392,12 @@ public class Enemy : MonoBehaviour
     
     IEnumerator DeathAnimation()
     {
-        // Flash red first
         if (spriteRenderer != null)
         {
             spriteRenderer.color = Color.red;
         }
         yield return new WaitForSeconds(0.1f);
         
-        // Then fade out
         float duration = 0.4f;
         float elapsed = 0f;
         

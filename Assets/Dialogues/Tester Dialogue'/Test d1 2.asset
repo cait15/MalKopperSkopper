@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29b158e03586f3446abebe81fc278675, type: 3}
+  m_Script: {fileID: 11500000, guid: ec02e0ab42e53de4b9785d62f88c63fa, type: 3}
   m_Name: Test d1 2
   m_EditorClassIdentifier: Assembly-CSharp::DialogueNode
-  dialogueText: and this is the end dialogue
-  characterName: Cait
+  dialogueText: THING
+  characterName: 
   choices: []
   nextDefaultNode: {fileID: 0}
   animatedSprites:
-  - {fileID: 21300000, guid: d7f41e92146eac04792e0a069aca0af7, type: 3}
+  - {fileID: 21300000, guid: a74c20c949163784f9a4144322841e64, type: 3}
   animationSpeed: 0.75
   isEndDialogue: 1

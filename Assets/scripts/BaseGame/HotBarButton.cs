@@ -1,8 +1,8 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
-
 public class HotbarButton : MonoBehaviour
 {
     [Header("UI References")]
@@ -61,7 +61,6 @@ public class HotbarButton : MonoBehaviour
         
         button.interactable = unlocked && affordable;
         
-        // Swap icon sprite
         if (iconImage != null)
         {
             iconImage.sprite = unlocked ? unlockedSprite : lockedSprite;

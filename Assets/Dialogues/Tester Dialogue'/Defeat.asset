@@ -9,15 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29b158e03586f3446abebe81fc278675, type: 3}
+  m_Script: {fileID: 11500000, guid: ec02e0ab42e53de4b9785d62f88c63fa, type: 3}
   m_Name: Defeat
   m_EditorClassIdentifier: Assembly-CSharp::DialogueNode
-  dialogueText: 'Aw shit
-
-'
-  characterName: Cait
+  dialogueText: KMS
+  characterName: 
   choices: []
   nextDefaultNode: {fileID: 0}
   animatedSprites: []
   animationSpeed: 0.75
-  isEndDialogue: 1
+  isEndDialogue: 0

@@ -1,6 +1,5 @@
 using UnityEngine;
 
-// Enum for different unit types
 public enum UnitType
 {
     MeleeOfficerV1,
@@ -9,7 +8,6 @@ public enum UnitType
     MeleeOfficerV2
 }
 
-// Data class to hold unit statistics
 [System.Serializable]
 public class UnitStats
 {
@@ -22,7 +20,6 @@ public class UnitStats
     public int cost;
     public float attackCooldown;
     
-    // Special stats for Melee Officer V2 (with dog)
     public int dogHealth;
     public float dogSpeed;
     public int dogDamage;
@@ -41,14 +38,12 @@ public class UnitDefinitions : MonoBehaviour
     
     void Awake()
     {
-        // Singleton pattern - only one instance exists
         if (Instance == null)
             Instance = this;
         else
             Destroy(gameObject);
     }
     
-    // Get the stats for a specific unit type
     public UnitStats GetUnitStats(UnitType type)
     {
         switch (type)
@@ -60,8 +55,8 @@ public class UnitDefinitions : MonoBehaviour
                     unitName = "Melee Officer V1",
                     health = 100,
                     speed = 75f,
-                    attackRange = 5f,
-                    damage = 10,
+                    attackRange = 8f,
+                    damage = 15,
                     cost = 500,
                     attackCooldown = 1f
                 };
@@ -103,7 +98,6 @@ public class UnitDefinitions : MonoBehaviour
                     damage = 10,
                     cost = 1500,
                     attackCooldown = 1f,
-                    // Dog stats
                     dogHealth = 75,
                     dogSpeed = 75f,
                     dogDamage = 15,
@@ -116,7 +110,6 @@ public class UnitDefinitions : MonoBehaviour
         }
     }
     
-    // Get the prefab for a specific unit type
     public GameObject GetUnitPrefab(UnitType type)
     {
         switch (type)

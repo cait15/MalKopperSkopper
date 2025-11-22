@@ -1,8 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class InputManager : MonoBehaviour
 {
+    [Header("Cameras")]
+    public Camera mainCamera;  // Isometric game camera
+    public Camera uiCamera;    // Separate UI camera
+    
     [Header("Ghost Preview")]
     private GameObject ghostUnit;
     private SpriteRenderer ghostRenderer;
@@ -12,13 +17,22 @@ public class InputManager : MonoBehaviour
     [Header("Selected Unit")]
     private OfficerUnit selectedUnit;
     
+    [Header("Placement Height")]
+    public float placementHeight = 0f;
+    
     private GameObject[] placementSpots;
     private Dictionary<GameObject, bool> spotOccupancy = new Dictionary<GameObject, bool>();
     private Dictionary<GameObject, OfficerUnit> spotUnits = new Dictionary<GameObject, OfficerUnit>();
     
     void Start()
     {
-        // Find all placement spot objects
+        // Auto-find cameras if not assigned
+        if (mainCamera == null)
+            mainCamera = Camera.main;
+        
+        if (uiCamera == null)
+            uiCamera = FindObjectOfType<Camera>();
+        
         placementSpots = GameObject.FindGameObjectsWithTag("Placements");
         
         if (placementSpots.Length == 0)
@@ -29,7 +43,6 @@ public class InputManager : MonoBehaviour
         {
             Debug.Log($"Found {placementSpots.Length} placement spot(s)");
             
-            // Initialize occupancy tracking
             foreach (GameObject spot in placementSpots)
             {
                 spotOccupancy[spot] = false;
@@ -37,6 +50,7 @@ public class InputManager : MonoBehaviour
             }
         }
     }
+    
     public void ClearPlacementForUnit(OfficerUnit unit)
     {
         foreach (var kvp in spotUnits)
@@ -50,9 +64,9 @@ public class InputManager : MonoBehaviour
             }
         }
     }
+    
     void Update()
     {
-        // Don't allow input during dialogue or battle phase
         if (GameManager.Instance.currentPhase == GamePhase.Dialogue ||
             GameManager.Instance.currentPhase == GamePhase.Battle)
         {
@@ -71,7 +85,6 @@ public class InputManager : MonoBehaviour
     
     public void StartPlacingUnit(UnitType unitType)
     {
-        // Only allow during setup phase
         if (GameManager.Instance.currentPhase != GamePhase.Setup)
         {
             Debug.Log("Can only place units during Setup Phase!");
@@ -100,14 +113,18 @@ public class InputManager : MonoBehaviour
         {
             Destroy(ghostUnit);
         }
-        
+    
         GameObject prefab = UnitDefinitions.Instance.GetUnitPrefab(unitType);
         if (prefab == null) return;
-        
+    
         ghostUnit = new GameObject("GhostUnit");
         ghostRenderer = ghostUnit.AddComponent<SpriteRenderer>();
-        
+    
+        // Look for SpriteRenderer on the prefab or its children
         SpriteRenderer prefabRenderer = prefab.GetComponent<SpriteRenderer>();
+        if (prefabRenderer == null)
+            prefabRenderer = prefab.GetComponentInChildren<SpriteRenderer>();
+    
         if (prefabRenderer != null)
         {
             ghostRenderer.sprite = prefabRenderer.sprite;
@@ -119,7 +136,6 @@ public class InputManager : MonoBehaviour
         ghostColor.a = 0.5f;
         ghostRenderer.color = ghostColor;
         
-        // Add range circle
         GameObject rangeCircle = new GameObject("RangeIndicator");
         rangeCircle.transform.parent = ghostUnit.transform;
         rangeCircle.transform.localPosition = Vector3.zero;
@@ -142,8 +158,8 @@ public class InputManager : MonoBehaviour
         {
             float angle = i * 360f / segments * Mathf.Deg2Rad;
             float x = Mathf.Cos(angle) * stats.attackRange;
-            float y = Mathf.Sin(angle) * stats.attackRange;
-            lineRenderer.SetPosition(i, new Vector3(x, y, 0));
+            float z = Mathf.Sin(angle) * stats.attackRange;
+            lineRenderer.SetPosition(i, new Vector3(x, 0, z));
         }
     }
     
@@ -151,14 +167,13 @@ public class InputManager : MonoBehaviour
     {
         if (!isPlacingUnit || ghostUnit == null) return;
         
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.z = 0;
+        Vector3 mousePos = GetMouseWorldPosition();
         ghostUnit.transform.position = mousePos;
         
         GameObject nearestSpot = GetNearestPlacementSpot(mousePos);
         bool isOverValidSpot = nearestSpot != null && 
                                !spotOccupancy[nearestSpot] && 
-                               Vector2.Distance(mousePos, nearestSpot.transform.position) < 1f;
+                               Vector3.Distance(mousePos, nearestSpot.transform.position) < 1f;
         
         Color ghostColor = isOverValidSpot ? new Color(0, 1, 0, 0.5f) : new Color(1, 0, 0, 0.5f);
         ghostRenderer.color = ghostColor;
@@ -171,7 +186,7 @@ public class InputManager : MonoBehaviour
         
         foreach (GameObject spot in placementSpots)
         {
-            float distance = Vector2.Distance(position, spot.transform.position);
+            float distance = Vector3.Distance(position, spot.transform.position);
             if (distance < nearestDistance)
             {
                 nearestDistance = distance;
@@ -182,33 +197,53 @@ public class InputManager : MonoBehaviour
         return nearest;
     }
     
+    Vector3 GetMouseWorldPosition()
+    {
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+    
+        // Raycast to find the nearest placement spot or terrain
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 1000f))
+        {
+            return hit.point;
+        }
+    
+        // Fallback to plane if nothing hit
+        Plane groundPlane = new Plane(Vector3.up, placementHeight);
+        if (groundPlane.Raycast(ray, out float enter))
+        {
+            return ray.origin + ray.direction * enter;
+        }
+    
+        return Vector3.zero;
+    }
     void HandleUnitPlacement()
     {
-        // Right click to cancel
         if (Input.GetMouseButtonDown(1) && isPlacingUnit)
         {
             CancelPlacement();
             return;
         }
         
-        // ESC to cancel
         if (Input.GetKeyDown(KeyCode.Escape) && isPlacingUnit)
         {
             CancelPlacement();
             return;
         }
         
-        // Left click to place
         if (isPlacingUnit && Input.GetMouseButtonDown(0))
         {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePos.z = 0;
+            // Don't place if clicking UI
+            if (EventSystem.current.IsPointerOverGameObject())
+                return;
+            
+            Vector3 mousePos = GetMouseWorldPosition();
             
             GameObject nearestSpot = GetNearestPlacementSpot(mousePos);
             
             if (nearestSpot != null && 
                 !spotOccupancy[nearestSpot] && 
-                Vector2.Distance(mousePos, nearestSpot.transform.position) < 1f)
+                Vector3.Distance(mousePos, nearestSpot.transform.position) < 1f)
             {
                 PlaceUnitAtSpot(nearestSpot);
             }
@@ -235,7 +270,10 @@ public class InputManager : MonoBehaviour
         
         GameManager.Instance.SpendMoney(stats.cost);
         
-        GameObject unitObj = Instantiate(unitPrefab, placementSpot.transform.position, Quaternion.identity);
+        Vector3 spawnPos = placementSpot.transform.position;
+        spawnPos.y = placementHeight;
+        
+        GameObject unitObj = Instantiate(unitPrefab, spawnPos, Quaternion.identity);
         OfficerUnit unit = unitObj.GetComponent<OfficerUnit>();
         
         if (unit != null)
@@ -275,10 +313,14 @@ public class InputManager : MonoBehaviour
     {
         if (!isPlacingUnit && Input.GetMouseButtonDown(0))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, 100f);
+            // Don't select if clicking UI
+            if (EventSystem.current.IsPointerOverGameObject())
+                return;
             
-            if (hit.collider != null)
+            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            
+            if (Physics.Raycast(ray, out hit, 100f))
             {
                 OfficerUnit unit = hit.collider.GetComponent<OfficerUnit>();
                 if (unit != null)
