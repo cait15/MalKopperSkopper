@@ -1379,71 +1379,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &329408817
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 329408819}
-  - component: {fileID: 329408818}
-  m_Layer: 0
-  m_Name: dialogueManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &329408818
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 329408817}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45ed97fef4777be4792f728aab8b36bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DialogueManager
-  dialoguePanel: {fileID: 0}
-  dialogueText: {fileID: 0}
-  characterNameText: {fileID: 0}
-  characterImageHolder: {fileID: 0}
-  choiceButtons: []
-  continueButton: {fileID: 0}
-  typeSpeed: 0.02
-  wave1Dialogues: []
-  wave2Dialogues: []
-  wave3Dialogues: []
-  wave4Dialogues: []
-  wave5Dialogues: []
-  wave6Dialogues: []
-  wave7Dialogues: []
-  wave8Dialogues: []
-  wave9Dialogues: []
-  wave10Dialogues: []
-  victoryDialogues: []
-  defeatDialogues: []
-  clickSound: {fileID: 0}
-  audioSource: {fileID: 0}
---- !u!4 &329408819
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 329408817}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 127.34569, y: 0, z: -39.28424}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -6934,6 +6869,77 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1572374166
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1572374168}
+  - component: {fileID: 1572374167}
+  m_Layer: 0
+  m_Name: DialougeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1572374167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572374166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45ed97fef4777be4792f728aab8b36bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueManager
+  dialoguePanel: {fileID: 5805579939082945606}
+  dialogueText: {fileID: 4343598080306469699}
+  characterNameText: {fileID: 2728413886888509677}
+  characterImageHolder: {fileID: 6753329007689316202}
+  choiceButtons:
+  - {fileID: 7564832996676676176}
+  - {fileID: 3553368246330053842}
+  - {fileID: 2516552180905066205}
+  continueButton: {fileID: 2315869316783627515}
+  typeSpeed: 0.02
+  wave1Dialogues:
+  - {fileID: 11400000, guid: 1a80453c3ddd2c6428506af89abae42a, type: 2}
+  - {fileID: 11400000, guid: ff646857789b2d747861c7794f37700a, type: 2}
+  - {fileID: 11400000, guid: b69d0c8d8db27c94c9a60426da7ec19d, type: 2}
+  wave2Dialogues: []
+  wave3Dialogues: []
+  wave4Dialogues: []
+  wave5Dialogues: []
+  wave6Dialogues: []
+  wave7Dialogues: []
+  wave8Dialogues: []
+  wave9Dialogues: []
+  wave10Dialogues: []
+  victoryDialogues: []
+  defeatDialogues: []
+  clickSound: {fileID: 0}
+  audioSource: {fileID: 0}
+--- !u!4 &1572374168
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572374166}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 120.92805, y: 0, z: 6.1432}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1578394872 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3861266525169673562, guid: a34469498081c6d4eb36aaf3b4d82959, type: 3}
@@ -7048,6 +7054,7 @@ MonoBehaviour:
   tankPrefab: {fileID: 1209965445005342198, guid: 6bfb11f754535e142a1d5a638c78fc1a, type: 3}
   rangedPrefab: {fileID: 4161343170308081368, guid: 7e810948872c87147b3ea0e7788c1b59, type: 3}
   meleeV2Prefab: {fileID: 1595303652278824033, guid: a17deec0121f1e548babe156219bf0d2, type: 3}
+  bossPrefab: {fileID: 1209965445005342198, guid: 540e4c9519d5a8f4099ffad11641781a, type: 3}
   spawnHeight: 5.5
 --- !u!4 &1623865582
 Transform:
@@ -8225,79 +8232,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1820990943}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1831082404
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1831082406}
-  - component: {fileID: 1831082405}
-  m_Layer: 0
-  m_Name: DialogueManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1831082405
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831082404}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45ed97fef4777be4792f728aab8b36bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DialogueManager
-  dialoguePanel: {fileID: 5805579939082945606}
-  dialogueText: {fileID: 4343598080306469699}
-  characterNameText: {fileID: 2728413886888509677}
-  characterImageHolder: {fileID: 6753329007689316202}
-  choiceButtons:
-  - {fileID: 7564832996676676176}
-  - {fileID: 3553368246330053842}
-  - {fileID: 2516552180905066205}
-  continueButton: {fileID: 2315869316783627515}
-  typeSpeed: 0.02
-  wave1Dialogues:
-  - {fileID: 11400000, guid: 1a80453c3ddd2c6428506af89abae42a, type: 2}
-  - {fileID: 11400000, guid: ff646857789b2d747861c7794f37700a, type: 2}
-  - {fileID: 0}
-  wave2Dialogues: []
-  wave3Dialogues: []
-  wave4Dialogues: []
-  wave5Dialogues: []
-  wave6Dialogues: []
-  wave7Dialogues: []
-  wave8Dialogues: []
-  wave9Dialogues: []
-  wave10Dialogues: []
-  victoryDialogues:
-  - {fileID: 11400000, guid: a6e50e7b4b2a73445a721cb088336f2d, type: 2}
-  defeatDialogues:
-  - {fileID: 11400000, guid: ccfb8d5b256796d44bb5379da940dc5c, type: 2}
-  clickSound: {fileID: 0}
-  audioSource: {fileID: 0}
---- !u!4 &1831082406
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831082404}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 81.50027, y: -0.03, z: 41.6297}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1832787285 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3861266525169673562, guid: a34469498081c6d4eb36aaf3b4d82959, type: 3}
@@ -16024,7 +15958,6 @@ SceneRoots:
   - {fileID: 715138901}
   - {fileID: 1623865582}
   - {fileID: 1727352320}
-  - {fileID: 329408819}
   - {fileID: 1516698039}
   - {fileID: 1866277006}
   - {fileID: 1753457707}
@@ -16037,5 +15970,5 @@ SceneRoots:
   - {fileID: 1227555790}
   - {fileID: 1484561127266537213}
   - {fileID: 1514511611}
-  - {fileID: 1831082406}
   - {fileID: 417860407}
+  - {fileID: 1572374168}

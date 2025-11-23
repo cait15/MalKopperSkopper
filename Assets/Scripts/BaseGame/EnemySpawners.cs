@@ -12,6 +12,7 @@ public class EnemySpawner : MonoBehaviour
     public GameObject tankPrefab;
     public GameObject rangedPrefab;
     public GameObject meleeV2Prefab;
+    public GameObject bossPrefab;
     
     [Header("Spawn Height")]
     public float spawnHeight = 0f;
@@ -67,6 +68,7 @@ public class EnemySpawner : MonoBehaviour
     {
         WaveConfiguration config = new WaveConfiguration();
         config.waveNumber = waveNumber;
+        config.hasBoss = (waveNumber == 5 || waveNumber == 10);
         
         switch (waveNumber)
         {
@@ -99,9 +101,9 @@ public class EnemySpawner : MonoBehaviour
                 break;
                 
             case 5:
-                config.description = "Wave 5: Continued Pressure";
+                config.description = "Wave 5: BOSS APPEARS - All Enemy Types";
                 config.enemyTypes = new List<EnemyType> { EnemyType.MeleeV1, EnemyType.Tank, EnemyType.Ranged };
-                config.enemyCount = 20;
+                config.enemyCount = 15;
                 config.spawnInterval = 1.5f;
                 break;
                 
@@ -142,11 +144,11 @@ public class EnemySpawner : MonoBehaviour
                 break;
                 
             case 10:
-                config.description = "Wave 10: FINAL WAVE - Ultimate Challenge";
+                config.description = "Wave 10: FINAL BOSS - Ultimate Challenge";
                 config.enemyTypes = new List<EnemyType> { 
                     EnemyType.MeleeV1, EnemyType.Tank, EnemyType.Ranged, EnemyType.MeleeV2WithDog 
                 };
-                config.enemyCount = 40;
+                config.enemyCount = 30;
                 config.spawnInterval = 0.7f;
                 break;
                 
@@ -179,6 +181,13 @@ public class EnemySpawner : MonoBehaviour
             enemiesSpawned++;
             
             yield return new WaitForSeconds(currentWave.spawnInterval);
+        }
+        
+        // Spawn boss at the end if this is a boss wave
+        if (currentWave.hasBoss)
+        {
+            yield return new WaitForSeconds(2f);
+            SpawnBoss();
         }
         
         isSpawning = false;
@@ -220,6 +229,37 @@ public class EnemySpawner : MonoBehaviour
             enemiesAlive++;
         }
     }
+    
+    void SpawnBoss()
+    {
+        if (spawnerObjects.Count == 0)
+        {
+            Debug.LogError("No spawner objects available for boss!");
+            return;
+        }
+
+        if (bossPrefab == null)
+        {
+            Debug.LogError("Boss prefab not assigned!");
+            return;
+        }
+
+        GameObject spawner = spawnerObjects[Random.Range(0, spawnerObjects.Count)];
+        Vector3 spawnPos = spawner.transform.position;
+        spawnPos.y = spawnHeight;
+
+        GameObject bossObj = Instantiate(bossPrefab, spawnPos, Quaternion.identity);
+
+        Enemy boss = bossObj.GetComponent<Enemy>();
+
+        if (boss != null)
+        {
+            boss.enemyType = EnemyType.Boss;
+            ConfigureBossStats(boss, currentWave.waveNumber);
+            enemiesAlive++;
+            Debug.Log($"<color=red>BOSS SPAWNED!</color>");
+        }
+    }
 
     GameObject GetEnemyPrefab(EnemyType type)
     {
@@ -233,6 +273,8 @@ public class EnemySpawner : MonoBehaviour
                 return rangedPrefab;
             case EnemyType.MeleeV2WithDog:
                 return meleeV2Prefab;
+            case EnemyType.Boss:
+                return bossPrefab;
             default:
                 return null;
         }
@@ -278,6 +320,17 @@ public class EnemySpawner : MonoBehaviour
                 enemy.attackCooldown = 1f;
                 break;
         }
+    }
+    
+    void ConfigureBossStats(Enemy boss, int waveNumber)
+    {
+        // Boss has massive HP
+        boss.health = 500 + (waveNumber * 100);
+        boss.speed = 1.5f;
+        boss.damage = 35 + (waveNumber * 5);
+        boss.moneyReward = 500;
+        boss.attackRange = 4f;
+        boss.attackCooldown = 1.5f;
     }
     
     public void OnEnemyKilled()
@@ -327,6 +380,7 @@ public class EnemySpawner : MonoBehaviour
         Debug.Log("Game Over - All enemies deactivated");
     }
 }
+
 [System.Serializable]
 public class WaveConfiguration
 {
@@ -335,4 +389,5 @@ public class WaveConfiguration
     public int enemyCount;
     public float spawnInterval;
     public string description;
-}
+    public bool hasBoss;
+} 

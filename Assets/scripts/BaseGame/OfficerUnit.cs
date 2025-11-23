@@ -21,10 +21,7 @@ public class OfficerUnit : MonoBehaviour
     [Header("References")]
     public SpriteRenderer spriteRenderer;
     public Animator animator;
-    
-    [Header("Visual Feedback")]
-    public GameObject healthBarPrefab;
-    private GameObject healthBarInstance;
+    public HealthBar healthBar;
     
     private GameObject dogCompanion;
     private int dogCurrentHealth;
@@ -40,6 +37,16 @@ public class OfficerUnit : MonoBehaviour
         
         currentHealth = stats.health;
         GameManager.Instance.RegisterUnit(this);
+        
+        if (healthBar == null)
+        {
+            healthBar = GetComponentInChildren<HealthBar>();
+        }
+        
+        if (healthBar != null)
+        {
+            healthBar.UpdateHealthBar(stats.health, currentHealth);
+        }
         
         if (stats.unitType == UnitType.MeleeOfficerV2)
         {
@@ -140,6 +147,11 @@ public class OfficerUnit : MonoBehaviour
     {
         currentHealth -= damage;
         
+        if (healthBar != null)
+        {
+            healthBar.UpdateHealthBar(stats.health + temporaryHealthBonus, currentHealth);
+        }
+        
         StartCoroutine(DamageFlash());
         
         if (currentHealth <= 0)
@@ -163,6 +175,11 @@ public class OfficerUnit : MonoBehaviour
     {
         int maxHealth = stats.health + temporaryHealthBonus;
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        
+        if (healthBar != null)
+        {
+            healthBar.UpdateHealthBar(maxHealth, currentHealth);
+        }
         
         StartCoroutine(HealFlash());
         

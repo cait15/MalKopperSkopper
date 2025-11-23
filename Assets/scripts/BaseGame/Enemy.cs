@@ -8,11 +8,20 @@ public enum EnemyType
     MeleeV1,
     Tank,
     Ranged,
-    MeleeV2WithDog
+    MeleeV2WithDog,
+    Boss
 }
 
 public class Enemy : MonoBehaviour
 {
+    [Header("MiniBoss Configuration")]
+    public bool isMiniBoss = false;
+    public float miniBossHealthMultiplier = 3.0f; 
+    public float miniBossDamageMultiplier = 2.0f;
+    public float miniBossSpeedMultiplier = 2.0f;
+    
+
+
     [Header("Enemy Type")]
     public EnemyType enemyType;
     
@@ -51,6 +60,15 @@ public class Enemy : MonoBehaviour
     
     void Start()
     {
+        if (isMiniBoss)
+        {
+            // Apply health multiplier
+            health = Mathf.RoundToInt(health * miniBossHealthMultiplier);
+            // Apply damage multiplier
+            damage = Mathf.RoundToInt(damage * miniBossDamageMultiplier);
+            
+        }
+
         currentHealth = health;
         
         if (spriteRenderer == null)
@@ -72,10 +90,15 @@ public class Enemy : MonoBehaviour
             Debug.LogError("TowerNode object with PathNode script and 'TowerNode' tag not found.");
         }
 
+        // NOTE: The code below relies on external scripts (AStarPathfinder, PathfindingManager, OfficerUnit, GameManager, EnemySpawner) 
+        // which are assumed to exist based on your original file structure.
+
         PathNode startNode = FindNearestStartNode();
         
         if (startNode != null && towerNode != null)
         {
+            // Assuming AStarPathfinder is an existing static class or singleton
+            // If this line causes an error, it means the class is missing or misnamed.
             pathNodeList = AStarPathfinder.FindPath(startNode, towerNode);
 
             if (pathNodeList != null && pathNodeList.Count > 0)
@@ -189,6 +212,7 @@ public class Enemy : MonoBehaviour
         PathNode startNode = FindNearestStartNode();
         if (startNode != null && towerNode != null)
         {
+            // Assuming AStarPathfinder is an existing static class or singleton
             pathNodeList = AStarPathfinder.FindPath(startNode, towerNode);
             currentPathIndex = 0;
             if (pathNodeList != null && pathNodeList.Count > 0)
