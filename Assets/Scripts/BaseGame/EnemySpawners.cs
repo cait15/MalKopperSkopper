@@ -108,7 +108,7 @@ public class EnemySpawner : MonoBehaviour
         {
             case 1:
                 config.description = "Wave 1: Introduction - Melee Enemies V1";
-                config.enemyTypes = new List<EnemyType> { EnemyType.MeleeV1 };
+                config.enemyTypes = new List<EnemyType> { EnemyType.Ranged };
                 config.enemyCount = 10;
                 config.spawnInterval = 2.0f;
                 break;
@@ -144,7 +144,7 @@ public class EnemySpawner : MonoBehaviour
             case 6:
                 config.description = "Wave 6: Dogs Unleashed - All Enemy Types";
                 config.enemyTypes = new List<EnemyType> { 
-                    EnemyType.MeleeV1, EnemyType.Tank, EnemyType.Ranged, EnemyType.MeleeV2WithDog 
+                    EnemyType.MeleeV1, EnemyType.Tank, EnemyType.Ranged, 
                 };
                 config.enemyCount = 22;
                 config.spawnInterval = 1.3f;
@@ -153,7 +153,7 @@ public class EnemySpawner : MonoBehaviour
             case 7:
                 config.description = "Wave 7: Heavy Assault";
                 config.enemyTypes = new List<EnemyType> { 
-                    EnemyType.MeleeV1, EnemyType.Tank, EnemyType.Ranged, EnemyType.MeleeV2WithDog 
+                    EnemyType.MeleeV1, EnemyType.Tank, EnemyType.Ranged, 
                 };
                 config.enemyCount = 25;
                 config.spawnInterval = 1.0f;
@@ -162,7 +162,7 @@ public class EnemySpawner : MonoBehaviour
             case 8:
                 config.description = "Wave 8: Overwhelming Force";
                 config.enemyTypes = new List<EnemyType> { 
-                    EnemyType.MeleeV1, EnemyType.Tank, EnemyType.Ranged, EnemyType.MeleeV2WithDog 
+                    EnemyType.MeleeV1, EnemyType.Tank, EnemyType.Ranged, 
                 };
                 config.enemyCount = 28;
                 config.spawnInterval = 0.9f;
@@ -171,7 +171,7 @@ public class EnemySpawner : MonoBehaviour
             case 9:
                 config.description = "Wave 9: Near Breaking Point";
                 config.enemyTypes = new List<EnemyType> { 
-                    EnemyType.MeleeV1, EnemyType.Tank, EnemyType.Ranged, EnemyType.MeleeV2WithDog 
+                    EnemyType.MeleeV1, EnemyType.Tank, EnemyType.Ranged, 
                 };
                 config.enemyCount = 32;
                 config.spawnInterval = 0.8f;
@@ -180,7 +180,7 @@ public class EnemySpawner : MonoBehaviour
             case 10:
                 config.description = "Wave 10: FINAL BOSS - Ultimate Challenge";
                 config.enemyTypes = new List<EnemyType> { 
-                    EnemyType.MeleeV1, EnemyType.Tank, EnemyType.Ranged, EnemyType.MeleeV2WithDog 
+                    EnemyType.MeleeV1, EnemyType.Tank, EnemyType.Ranged,
                 };
                 config.enemyCount = 30;
                 config.spawnInterval = 0.7f;
@@ -189,7 +189,7 @@ public class EnemySpawner : MonoBehaviour
             default:
                 config.description = $"Wave {waveNumber}: Endless Mode";
                 config.enemyTypes = new List<EnemyType> { 
-                    EnemyType.MeleeV1, EnemyType.Tank, EnemyType.Ranged, EnemyType.MeleeV2WithDog 
+                    EnemyType.MeleeV1, EnemyType.Tank, EnemyType.Ranged
                 };
                 config.enemyCount = 40 + ((waveNumber - 10) * 5);
                 config.spawnInterval = Mathf.Max(0.5f, 0.7f - ((waveNumber - 10) * 0.05f));
@@ -314,8 +314,7 @@ public class EnemySpawner : MonoBehaviour
                 return tankPrefab;
             case EnemyType.Ranged:
                 return rangedPrefab;
-            case EnemyType.MeleeV2WithDog:
-                return meleeV2Prefab;
+           
             case EnemyType.Boss:
                 return bossPrefab;
             default:
@@ -341,27 +340,20 @@ public class EnemySpawner : MonoBehaviour
                 enemy.speed = 2f;
                 enemy.damage = 20 + (waveNumber * 3);
                 enemy.moneyReward = 100;
-                enemy.attackRange = 3.5f;
+                enemy.attackRange = 4.5f;
                 enemy.attackCooldown = 2f;
                 break;
                 
             case EnemyType.Ranged:
                 enemy.health = 60 + (waveNumber * 6);
-                enemy.speed = 2.5f;
+                enemy.speed = 4.5f;
                 enemy.damage = 15 + (waveNumber * 2);
                 enemy.moneyReward = 75;
                 enemy.attackRange = 6f;
                 enemy.attackCooldown = 1.5f;
                 break;
                 
-            case EnemyType.MeleeV2WithDog:
-                enemy.health = 80 + (waveNumber * 10);
-                enemy.speed = 3f;
-                enemy.damage = 12 + (waveNumber * 2);
-                enemy.moneyReward = 120;
-                enemy.attackRange = 2.5f;
-                enemy.attackCooldown = 1f;
-                break;
+          
         }
     }
     

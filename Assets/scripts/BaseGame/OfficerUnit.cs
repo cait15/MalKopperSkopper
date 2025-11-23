@@ -18,14 +18,14 @@ public class OfficerUnit : MonoBehaviour
     public int temporaryHealthBonus = 0;
     public int temporaryDamageBonus = 0;
     
+    [Header("Bullet")]
+    public Sprite bulletSprite;
+    public float bulletScale = 0.1f;
+    
     [Header("References")]
     public SpriteRenderer spriteRenderer;
     public Animator animator;
     public HealthBar healthBar;
-    
-    private GameObject dogCompanion;
-    private int dogCurrentHealth;
-    private bool hasDog = false;
     
     void Start()
     {
@@ -37,7 +37,6 @@ public class OfficerUnit : MonoBehaviour
         
         currentHealth = stats.health;
         
-        // Register with the right game manager
         if (GameManager.Instance != null)
         {
             GameManager.Instance.RegisterUnit(this);
@@ -55,11 +54,6 @@ public class OfficerUnit : MonoBehaviour
         if (healthBar != null)
         {
             healthBar.UpdateHealthBar(stats.health, currentHealth);
-        }
-        
-        if (stats.unitType == UnitType.MeleeOfficerV2)
-        {
-            SpawnDogCompanion();
         }
     }
     
@@ -134,7 +128,15 @@ public class OfficerUnit : MonoBehaviour
         if (currentTarget == null || !currentTarget.isAlive) return;
         
         int totalDamage = stats.damage + temporaryDamageBonus;
-        currentTarget.TakeDamage(totalDamage);
+        
+        if (stats.unitType == UnitType.RangedOfficer)
+        {
+            FireBullet(totalDamage);
+        }
+        else
+        {
+            currentTarget.TakeDamage(totalDamage);
+        }
         
         if (animator != null)
         {
@@ -142,6 +144,37 @@ public class OfficerUnit : MonoBehaviour
         }
         
         StartCoroutine(AttackAnimation());
+    }
+    
+    void FireBullet(int bulletDamage)
+    {
+        GameObject bulletObj = new GameObject("AllyBullet");
+        bulletObj.transform.position = transform.position;
+        bulletObj.transform.localScale = Vector3.one * bulletScale;
+        
+        SpriteRenderer bulletSpriteRenderer = bulletObj.AddComponent<SpriteRenderer>();
+        if (bulletSprite != null)
+        {
+            bulletSpriteRenderer.sprite = bulletSprite;
+        }
+        bulletSpriteRenderer.color = Color.green;
+        bulletSpriteRenderer.sortingLayerName = "Units";
+        bulletSpriteRenderer.sortingOrder = 10;
+        
+        SphereCollider collider = bulletObj.AddComponent<SphereCollider>();
+        collider.isTrigger = true;
+        collider.radius = 0.2f;
+        
+        Rigidbody rb = bulletObj.AddComponent<Rigidbody>();
+        rb.isKinematic = true;
+        
+        Bullet bullet = bulletObj.AddComponent<Bullet>();
+        bullet.damage = bulletDamage;
+        bullet.isAllyBullet = true;
+        bullet.speed = 15f;
+        
+        Vector3 direction = (currentTarget.transform.position - transform.position).normalized;
+        bullet.SetDirection(direction);
     }
     
     IEnumerator AttackAnimation()
@@ -206,27 +239,10 @@ public class OfficerUnit : MonoBehaviour
         }
     }
     
-    void SpawnDogCompanion()
-    {
-        hasDog = true;
-        dogCurrentHealth = stats.dogHealth;
-        
-        dogCompanion = new GameObject("DogCompanion");
-        dogCompanion.transform.parent = transform;
-        dogCompanion.transform.localPosition = new Vector3(0.5f, 0, -0.2f);
-        
-        SpriteRenderer dogSprite = dogCompanion.AddComponent<SpriteRenderer>();
-        dogSprite.color = new Color(0.6f, 0.4f, 0.2f);
-        dogSprite.sortingOrder = spriteRenderer != null ? spriteRenderer.sortingOrder : 5;
-        
-        Debug.Log($"{stats.unitName} has a dog companion!");
-    }
-    
     void Die()
     {
         isAlive = false;
         
-        // Unregister with the right game manager
         if (GameManager.Instance != null)
         {
             GameManager.Instance.UnregisterUnit(this);

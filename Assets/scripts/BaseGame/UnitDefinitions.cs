@@ -5,7 +5,7 @@ public enum UnitType
     MeleeOfficerV1,
     TankOfficer,
     RangedOfficer,
-    MeleeOfficerV2
+    Dog  // Replaced MeleeOfficerV2
 }
 
 [System.Serializable]
@@ -19,11 +19,6 @@ public class UnitStats
     public int damage;
     public int cost;
     public float attackCooldown;
-    
-    public int dogHealth;
-    public float dogSpeed;
-    public int dogDamage;
-    public float dogRange;
 }
 
 public class UnitDefinitions : MonoBehaviour
@@ -34,7 +29,7 @@ public class UnitDefinitions : MonoBehaviour
     public GameObject meleeOfficerV1Prefab;
     public GameObject tankOfficerPrefab;
     public GameObject rangedOfficerPrefab;
-    public GameObject meleeOfficerV2Prefab;
+    public GameObject dogPrefab;  // Replaced MeleeOfficerV2
     
     void Awake()
     {
@@ -87,21 +82,17 @@ public class UnitDefinitions : MonoBehaviour
                     attackCooldown = 1.5f
                 };
                 
-            case UnitType.MeleeOfficerV2:
+            case UnitType.Dog:
                 return new UnitStats
                 {
-                    unitType = UnitType.MeleeOfficerV2,
-                    unitName = "Melee Officer V2 (with Dog)",
-                    health = 100,
-                    speed = 50f,
-                    attackRange = 5f,
-                    damage = 10,
-                    cost = 1500,
-                    attackCooldown = 1f,
-                    dogHealth = 75,
-                    dogSpeed = 75f,
-                    dogDamage = 15,
-                    dogRange = 2f
+                    unitType = UnitType.Dog,
+                    unitName = "Dog",
+                    health = 75,
+                    speed = 75f,
+                    attackRange = 2f,
+                    damage = 15,
+                    cost = 800,
+                    attackCooldown = 1.2f
                 };
                 
             default:
@@ -123,8 +114,8 @@ public class UnitDefinitions : MonoBehaviour
             case UnitType.RangedOfficer:
                 return rangedOfficerPrefab;
                 
-            case UnitType.MeleeOfficerV2:
-                return meleeOfficerV2Prefab;
+            case UnitType.Dog:
+                return dogPrefab;
                 
             default:
                 Debug.LogError($"No prefab assigned for unit type: {type}");

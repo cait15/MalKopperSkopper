@@ -1,14 +1,12 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 public enum EnemyType
 {
     MeleeV1,
     Tank,
     Ranged,
-    MeleeV2WithDog,
     Boss
 }
 
@@ -31,6 +29,10 @@ public class Enemy : MonoBehaviour
     public float attackRange = 1.5f;
     public float attackCooldown = 1f;
     
+    [Header("Bullet")]
+    public Sprite bulletSprite;
+    public float bulletScale = 0.8f;
+    
     [Header("State")]
     public bool isAlive = true;
     private int currentHealth;
@@ -49,10 +51,6 @@ public class Enemy : MonoBehaviour
     private const float nodeThreshold = 0.1f;
     private PathNode currentTargetNode;
     private PathNode towerNode;
-    private GameObject dogCompanion;
-    private SpriteRenderer dogSprite;
-    private int dogHealth;
-    private bool dogAlive = true;
     
     void Start()
     {
@@ -93,12 +91,6 @@ public class Enemy : MonoBehaviour
             {
                 currentTargetNode = pathNodeList[currentPathIndex];
             }
-        }
-        
-        if (enemyType == EnemyType.MeleeV2WithDog)
-        {
-            SpawnDogCompanion();
-            dogHealth = 75;
         }
     }
 
@@ -256,7 +248,14 @@ public class Enemy : MonoBehaviour
     {
         if (currentTarget != null && currentTarget.isAlive)
         {
-            currentTarget.TakeDamage(damage); 
+            if (enemyType == EnemyType.Ranged)
+            {
+                FireBullet(damage);
+            }
+            else
+            {
+                currentTarget.TakeDamage(damage);
+            }
             
             if (animator != null)
             {
@@ -271,6 +270,38 @@ public class Enemy : MonoBehaviour
         }
     }
     
+    void FireBullet(int bulletDamage)
+    {
+        GameObject bulletObj = new GameObject("EnemyBullet");
+        bulletObj.transform.position = transform.position;
+        bulletObj.transform.localScale = Vector3.one * bulletScale;
+        
+        SpriteRenderer bulletSpriteRenderer = bulletObj.AddComponent<SpriteRenderer>();
+        Debug.Log("Bullet fired!");
+        if (bulletSprite != null)
+        {
+            bulletSpriteRenderer.sprite = bulletSprite;
+        }
+        bulletSpriteRenderer.color = Color.red;
+        bulletSpriteRenderer.sortingLayerName = "Units";
+        bulletSpriteRenderer.sortingOrder = 10;
+        
+        SphereCollider collider = bulletObj.AddComponent<SphereCollider>();
+        collider.isTrigger = true;
+        collider.radius = 0.2f;
+        
+        Rigidbody rb = bulletObj.AddComponent<Rigidbody>();
+        rb.isKinematic = true;
+        
+        Bullet bullet = bulletObj.AddComponent<Bullet>();
+        bullet.damage = bulletDamage;
+        bullet.isAllyBullet = false;
+        bullet.speed = 15f;
+        
+        Vector3 direction = (currentTarget.transform.position - transform.position).normalized;
+        bullet.SetDirection(direction);
+    }
+    
     IEnumerator AttackAnimation()
     {
         Vector3 originalScale = transform.localScale;
@@ -281,29 +312,7 @@ public class Enemy : MonoBehaviour
     
     public void TakeDamage(int damageAmount)
     {
-        if (enemyType == EnemyType.MeleeV2WithDog && dogAlive)
-        {
-            dogHealth -= damageAmount;
-            
-            if (dogSprite != null)
-            {
-                StartCoroutine(DamageFlashDog());
-            }
-            
-            if (dogHealth <= 0)
-            {
-                KillDog();
-                int overflow = Mathf.Abs(dogHealth);
-                if (overflow > 0)
-                {
-                    currentHealth -= overflow;
-                }
-            }
-        }
-        else
-        {
-            currentHealth -= damageAmount;
-        }
+        currentHealth -= damageAmount;
         
         StartCoroutine(DamageFlash());
         
@@ -324,71 +333,10 @@ public class Enemy : MonoBehaviour
         }
     }
     
-    IEnumerator DamageFlashDog()
-    {
-        if (dogSprite != null)
-        {
-            Color originalColor = dogSprite.color;
-            dogSprite.color = Color.red;
-            yield return new WaitForSeconds(0.1f);
-            dogSprite.color = originalColor;
-        }
-    }
-    
-    void SpawnDogCompanion()
-    {
-        dogAlive = true;
-        
-        dogCompanion = new GameObject("Dog");
-        dogCompanion.transform.parent = transform;
-        dogCompanion.transform.localPosition = new Vector3(0.6f, 0, -0.3f);
-        dogCompanion.transform.localScale = new Vector3(0.6f, 0.6f, 1f);
-        
-        dogSprite = dogCompanion.AddComponent<SpriteRenderer>();
-        dogSprite.color = new Color(0.6f, 0.4f, 0.2f); 
-        dogSprite.sortingLayerName = "Units";
-        dogSprite.sortingOrder = spriteRenderer != null ? spriteRenderer.sortingOrder : 5;
-    }
-    
-    void KillDog()
-    {
-        dogAlive = false;
-        if (dogCompanion != null)
-        {
-            StartCoroutine(DogDeathAnimation());
-        }
-    }
-    
-    IEnumerator DogDeathAnimation()
-    {
-        float duration = 0.3f;
-        float elapsed = 0f;
-        Vector3 originalScale = dogCompanion.transform.localScale;
-        
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / duration;
-            
-            if (dogSprite != null)
-            {
-                Color c = dogSprite.color;
-                c.a = 1f - t;
-                dogSprite.color = c;
-            }
-            
-            dogCompanion.transform.localScale = Vector3.Lerp(originalScale, Vector3.zero, t);
-            yield return null;
-        }
-        
-        Destroy(dogCompanion);
-    }
-    
     void Die()
     {
         isAlive = false;
         
-        // Works with both GameManager and TutGameManager
         if (GameManager.Instance != null)
         {
             GameManager.Instance.AddMoney(moneyReward);
@@ -439,7 +387,6 @@ public class Enemy : MonoBehaviour
     
     void ReachTower()
     {
-        // Works with both GameManager and TutGameManager
         if (GameManager.Instance != null)
         {
             GameManager.Instance.TakeDamage(damage);

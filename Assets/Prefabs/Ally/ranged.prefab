@@ -125,6 +125,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4152078298709849619}
+  - {fileID: 5575303093050402384}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4648869037299091138
@@ -227,14 +228,12 @@ MonoBehaviour:
     damage: 0
     cost: 0
     attackCooldown: 0
-    dogHealth: 0
-    dogSpeed: 0
-    dogDamage: 0
-    dogRange: 0
   currentHealth: 0
   isAlive: 1
   temporaryHealthBonus: 0
   temporaryDamageBonus: 0
+  bulletSprite: {fileID: 21300000, guid: 16e451a42f671f44ea2d405b15fce4b3, type: 3}
+  bulletScale: 0.1
   spriteRenderer: {fileID: 0}
   animator: {fileID: 0}
   healthBar: {fileID: 7058950832082584327}
@@ -246,6 +245,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4152078298709849619}
     m_Modifications:
+    - target: {fileID: 871996471322952146, guid: 6c8a2a5f1e808164fa2b767d8281ac58, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6473579488644348782, guid: 6c8a2a5f1e808164fa2b767d8281ac58, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -351,3 +354,65 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e9619ff6d3e6aa41a10b15b9746b20c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthBar
+--- !u!1001 &7342538309325494885
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5634231818360488843}
+    m_Modifications:
+    - target: {fileID: 2934828733978967093, guid: d84cd15981af54b47a82d964f7116343, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934828733978967093, guid: d84cd15981af54b47a82d964f7116343, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934828733978967093, guid: d84cd15981af54b47a82d964f7116343, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934828733978967093, guid: d84cd15981af54b47a82d964f7116343, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934828733978967093, guid: d84cd15981af54b47a82d964f7116343, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934828733978967093, guid: d84cd15981af54b47a82d964f7116343, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934828733978967093, guid: d84cd15981af54b47a82d964f7116343, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934828733978967093, guid: d84cd15981af54b47a82d964f7116343, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934828733978967093, guid: d84cd15981af54b47a82d964f7116343, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2934828733978967093, guid: d84cd15981af54b47a82d964f7116343, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7246567747167027978, guid: d84cd15981af54b47a82d964f7116343, type: 3}
+      propertyPath: m_Name
+      value: Bullet
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d84cd15981af54b47a82d964f7116343, type: 3}
+--- !u!4 &5575303093050402384 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2934828733978967093, guid: d84cd15981af54b47a82d964f7116343, type: 3}
+  m_PrefabInstance: {fileID: 7342538309325494885}
+  m_PrefabAsset: {fileID: 0}

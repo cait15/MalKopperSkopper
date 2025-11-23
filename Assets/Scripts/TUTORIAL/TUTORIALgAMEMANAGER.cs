@@ -265,9 +265,9 @@ public class TutGameManager : MonoBehaviour
                 break;
                 
             case 6:
-                if (!unlockedUnits.Contains(UnitType.MeleeOfficerV2))
+                if (!unlockedUnits.Contains(UnitType.Dog))
                 {
-                    unlockedUnits.Add(UnitType.MeleeOfficerV2);
+                    unlockedUnits.Add(UnitType.Dog);
                     Debug.Log("<color=yellow>[UNLOCK] Melee Officer V2 (with Dog) Unlocked!</color>");
                 }
                 else

@@ -1,3 +1,4 @@
+// ============ UPDATED InputManager.cs ============
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
@@ -5,8 +6,8 @@ using UnityEngine.EventSystems;
 public class InputManager : MonoBehaviour
 {
     [Header("Cameras")]
-    public Camera mainCamera;  // Isometric game camera
-    public Camera uiCamera;    // Separate UI camera
+    public Camera mainCamera;
+    public Camera uiCamera;
     
     [Header("Ghost Preview")]
     private GameObject ghostUnit;
@@ -27,14 +28,12 @@ public class InputManager : MonoBehaviour
     
     void Start()
     {
-        // Auto-find cameras if not assigned
         if (mainCamera == null)
             mainCamera = Camera.main;
         
         if (uiCamera == null)
             uiCamera = FindObjectOfType<Camera>();
         
-        // Check if we're in tutorial mode
         isTutorial = TutorialLevelManager.Instance != null && TutorialLevelManager.Instance.isTutorial;
         
         placementSpots = GameObject.FindGameObjectsWithTag("Placements");
@@ -155,7 +154,6 @@ public class InputManager : MonoBehaviour
         ghostUnit = new GameObject("GhostUnit");
         ghostRenderer = ghostUnit.AddComponent<SpriteRenderer>();
     
-        // Look for SpriteRenderer on the prefab or its children
         SpriteRenderer prefabRenderer = prefab.GetComponent<SpriteRenderer>();
         if (prefabRenderer == null)
             prefabRenderer = prefab.GetComponentInChildren<SpriteRenderer>();
@@ -236,14 +234,12 @@ public class InputManager : MonoBehaviour
     {
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
     
-        // Raycast to find the nearest placement spot or terrain
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, 1000f))
         {
             return hit.point;
         }
     
-        // Fallback to plane if nothing hit
         Plane groundPlane = new Plane(Vector3.up, placementHeight);
         if (groundPlane.Raycast(ray, out float enter))
         {
@@ -269,7 +265,6 @@ public class InputManager : MonoBehaviour
         
         if (isPlacingUnit && Input.GetMouseButtonDown(0))
         {
-            // Don't place if clicking UI
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
             
@@ -297,7 +292,6 @@ public class InputManager : MonoBehaviour
             return;
         }
         
-        // Check affordability based on game mode
         if (isTutorial)
         {
             if (TutGameManager.Instance == null) return;
@@ -308,7 +302,6 @@ public class InputManager : MonoBehaviour
                 return;
             }
             TutGameManager.Instance.SpendMoney(stats.cost);
-            TutGameManager.Instance.RegisterUnit(null); // Will be set below
         }
         else
         {
@@ -365,7 +358,6 @@ public class InputManager : MonoBehaviour
     {
         if (!isPlacingUnit && Input.GetMouseButtonDown(0))
         {
-            // Don't select if clicking UI
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
             

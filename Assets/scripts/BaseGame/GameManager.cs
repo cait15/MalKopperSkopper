@@ -225,9 +225,9 @@ public class GameManager : MonoBehaviour
         switch (wave)
         {
             case 2:
-                if (!unlockedUnits.Contains(UnitType.TankOfficer))
+                if (!unlockedUnits.Contains(UnitType.RangedOfficer))
                 {
-                    unlockedUnits.Add(UnitType.TankOfficer);
+                    unlockedUnits.Add(UnitType.RangedOfficer);
                     Debug.Log("<color=yellow>[UNLOCK] Tank Officer Unlocked!</color>");
                 }
                 else
@@ -249,9 +249,9 @@ public class GameManager : MonoBehaviour
                 break;
                 
             case 6:
-                if (!unlockedUnits.Contains(UnitType.MeleeOfficerV2))
+                if (!unlockedUnits.Contains(UnitType.Dog))
                 {
-                    unlockedUnits.Add(UnitType.MeleeOfficerV2);
+                    unlockedUnits.Add(UnitType.Dog);
                     Debug.Log("<color=yellow>[UNLOCK] Melee Officer V2 (with Dog) Unlocked!</color>");
                 }
                 else
