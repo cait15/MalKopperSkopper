@@ -36,7 +36,16 @@ public class OfficerUnit : MonoBehaviour
         }
         
         currentHealth = stats.health;
-        GameManager.Instance.RegisterUnit(this);
+        
+        // Register with the right game manager
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.RegisterUnit(this);
+        }
+        else if (TutGameManager.Instance != null)
+        {
+            TutGameManager.Instance.RegisterUnit(this);
+        }
         
         if (healthBar == null)
         {
@@ -216,7 +225,16 @@ public class OfficerUnit : MonoBehaviour
     void Die()
     {
         isAlive = false;
-        GameManager.Instance.UnregisterUnit(this);
+        
+        // Unregister with the right game manager
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.UnregisterUnit(this);
+        }
+        else if (TutGameManager.Instance != null)
+        {
+            TutGameManager.Instance.UnregisterUnit(this);
+        }
         
         InputManager inputManager = FindObjectOfType<InputManager>();
         if (inputManager != null)
@@ -279,6 +297,10 @@ public class OfficerUnit : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.UnregisterUnit(this);
+        }
+        else if (TutGameManager.Instance != null)
+        {
+            TutGameManager.Instance.UnregisterUnit(this);
         }
     }
 }

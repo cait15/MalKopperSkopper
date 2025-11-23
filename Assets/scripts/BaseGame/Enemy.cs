@@ -20,8 +20,6 @@ public class Enemy : MonoBehaviour
     public float miniBossDamageMultiplier = 2.0f;
     public float miniBossSpeedMultiplier = 2.0f;
     
-
-
     [Header("Enemy Type")]
     public EnemyType enemyType;
     
@@ -46,13 +44,11 @@ public class Enemy : MonoBehaviour
     public Animator animator;
     
     private GameObject towerTarget;
-
     private List<PathNode> pathNodeList;
     private int currentPathIndex = 0;
     private const float nodeThreshold = 0.1f;
     private PathNode currentTargetNode;
     private PathNode towerNode;
-
     private GameObject dogCompanion;
     private SpriteRenderer dogSprite;
     private int dogHealth;
@@ -62,11 +58,8 @@ public class Enemy : MonoBehaviour
     {
         if (isMiniBoss)
         {
-            // Apply health multiplier
             health = Mathf.RoundToInt(health * miniBossHealthMultiplier);
-            // Apply damage multiplier
             damage = Mathf.RoundToInt(damage * miniBossDamageMultiplier);
-            
         }
 
         currentHealth = health;
@@ -90,15 +83,10 @@ public class Enemy : MonoBehaviour
             Debug.LogError("TowerNode object with PathNode script and 'TowerNode' tag not found.");
         }
 
-        // NOTE: The code below relies on external scripts (AStarPathfinder, PathfindingManager, OfficerUnit, GameManager, EnemySpawner) 
-        // which are assumed to exist based on your original file structure.
-
         PathNode startNode = FindNearestStartNode();
         
         if (startNode != null && towerNode != null)
         {
-            // Assuming AStarPathfinder is an existing static class or singleton
-            // If this line causes an error, it means the class is missing or misnamed.
             pathNodeList = AStarPathfinder.FindPath(startNode, towerNode);
 
             if (pathNodeList != null && pathNodeList.Count > 0)
@@ -212,7 +200,6 @@ public class Enemy : MonoBehaviour
         PathNode startNode = FindNearestStartNode();
         if (startNode != null && towerNode != null)
         {
-            // Assuming AStarPathfinder is an existing static class or singleton
             pathNodeList = AStarPathfinder.FindPath(startNode, towerNode);
             currentPathIndex = 0;
             if (pathNodeList != null && pathNodeList.Count > 0)
@@ -401,9 +388,14 @@ public class Enemy : MonoBehaviour
     {
         isAlive = false;
         
+        // Works with both GameManager and TutGameManager
         if (GameManager.Instance != null)
         {
             GameManager.Instance.AddMoney(moneyReward);
+        }
+        else if (TutGameManager.Instance != null)
+        {
+            TutGameManager.Instance.AddMoney(moneyReward);
         }
         
         if (EnemySpawner.Instance != null)
@@ -447,9 +439,14 @@ public class Enemy : MonoBehaviour
     
     void ReachTower()
     {
+        // Works with both GameManager and TutGameManager
         if (GameManager.Instance != null)
         {
             GameManager.Instance.TakeDamage(damage);
+        }
+        else if (TutGameManager.Instance != null)
+        {
+            TutGameManager.Instance.TakeDamage(damage);
         }
         
         if (EnemySpawner.Instance != null)

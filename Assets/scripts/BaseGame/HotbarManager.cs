@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 
-
 public enum BuffType
 {
     AttackBuff,
@@ -30,12 +29,15 @@ public class HotbarUI : MonoBehaviour
     private Dictionary<UnitType, HotbarButton> buttonMap = new Dictionary<UnitType, HotbarButton>();
     private Dictionary<BuffType, HotbarBuffButton> buffMap = new Dictionary<BuffType, HotbarBuffButton>();
     private InputManager inputManager;
-    private GameManager gameManager;
+    private bool isTutorial = false;
     
     void Start()
     {
         inputManager = FindObjectOfType<InputManager>();
-        gameManager = GameManager.Instance;
+        
+        // Check if we're in tutorial mode
+        isTutorial = TutorialLevelManager.Instance != null && TutorialLevelManager.Instance.isTutorial;
+        
         SetupButtonMap();
         UpdateAllButtons();
     }
@@ -70,39 +72,78 @@ public class HotbarUI : MonoBehaviour
     
     void UpdateAllButtons()
     {
+        // Get the right game manager
+        System.Collections.Generic.List<UnitType> unlockedUnits;
+        int playerMoney;
+        int currentWave;
+        
+        if (isTutorial)
+        {
+            if (TutGameManager.Instance == null) return;
+            unlockedUnits = TutGameManager.Instance.unlockedUnits;
+            playerMoney = TutGameManager.Instance.playerMoney;
+            currentWave = TutGameManager.Instance.currentWave;
+        }
+        else
+        {
+            if (GameManager.Instance == null) return;
+            unlockedUnits = GameManager.Instance.unlockedUnits;
+            playerMoney = GameManager.Instance.playerMoney;
+            currentWave = GameManager.Instance.currentWave;
+        }
+        
+        // Update unit buttons
         foreach (var kvp in buttonMap)
         {
             UnitType unitType = kvp.Key;
             HotbarButton button = kvp.Value;
             
-            bool isUnlocked = gameManager.unlockedUnits.Contains(unitType);
+            bool isUnlocked = unlockedUnits.Contains(unitType);
             UnitStats stats = UnitDefinitions.Instance.GetUnitStats(unitType);
-            bool canAfford = gameManager.CanAfford(stats.cost);
+            bool canAfford = playerMoney >= stats.cost;
             
             if (button != null)
             {
-                button.UpdateVisuals(isUnlocked, canAfford, gameManager.playerMoney);
+                button.UpdateVisuals(isUnlocked, canAfford, playerMoney);
             }
         }
         
-        bool attackBuffUnlocked = gameManager.currentWave >= 3;
+        // Update buff buttons
+        bool attackBuffUnlocked = currentWave >= 3;
         attackBuffButton.UpdateVisuals(attackBuffUnlocked);
         
-        bool healBuffUnlocked = gameManager.currentWave >= 4;
+        bool healBuffUnlocked = currentWave >= 4;
         healBuffButton.UpdateVisuals(healBuffUnlocked);
     }
     
     void OnUnitSelected(UnitType unitType)
     {
+        // Get the right game manager
+        System.Collections.Generic.List<UnitType> unlockedUnits;
+        int playerMoney;
+        
+        if (isTutorial)
+        {
+            if (TutGameManager.Instance == null) return;
+            unlockedUnits = TutGameManager.Instance.unlockedUnits;
+            playerMoney = TutGameManager.Instance.playerMoney;
+        }
+        else
+        {
+            if (GameManager.Instance == null) return;
+            unlockedUnits = GameManager.Instance.unlockedUnits;
+            playerMoney = GameManager.Instance.playerMoney;
+        }
+        
         UnitStats stats = UnitDefinitions.Instance.GetUnitStats(unitType);
         
-        if (!gameManager.unlockedUnits.Contains(unitType))
+        if (!unlockedUnits.Contains(unitType))
         {
             Debug.Log("Unit not unlocked yet!");
             return;
         }
         
-        if (!gameManager.CanAfford(stats.cost))
+        if (playerMoney < stats.cost)
         {
             Debug.Log($"Not enough money! Need R{stats.cost}");
             return;
@@ -113,7 +154,19 @@ public class HotbarUI : MonoBehaviour
     
     void OnBuffSelected(BuffType buffType)
     {
-        List<OfficerUnit> allUnits = gameManager.GetActiveUnits();
+        // Get the right game manager
+        System.Collections.Generic.List<OfficerUnit> allUnits;
+        
+        if (isTutorial)
+        {
+            if (TutGameManager.Instance == null) return;
+            allUnits = TutGameManager.Instance.GetActiveUnits();
+        }
+        else
+        {
+            if (GameManager.Instance == null) return;
+            allUnits = GameManager.Instance.GetActiveUnits();
+        }
         
         if (allUnits.Count == 0)
         {
@@ -132,7 +185,7 @@ public class HotbarUI : MonoBehaviour
         }
     }
     
-    void ApplyAttackBuff(List<OfficerUnit> units)
+    void ApplyAttackBuff(System.Collections.Generic.List<OfficerUnit> units)
     {
         foreach (OfficerUnit unit in units)
         {
@@ -144,7 +197,7 @@ public class HotbarUI : MonoBehaviour
         }
     }
     
-    void ApplyHealBuff(List<OfficerUnit> units)
+    void ApplyHealBuff(System.Collections.Generic.List<OfficerUnit> units)
     {
         foreach (OfficerUnit unit in units)
         {

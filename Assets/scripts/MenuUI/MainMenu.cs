@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     public GameObject mainMenuPanel;
     public GameObject settingsPanel;
     public GameObject guidePanel;
+    public GameObject tutorialButtons;
 
     [Header("Settings UI")]
     public TMP_Dropdown resolutionDropdown;
@@ -81,6 +82,11 @@ public class UIManager : MonoBehaviour
     public void StartGame()
     {
         SceneManager.LoadScene("SampleScene"); 
+        Debug.Log("Loading SampleScene...");
+    }
+    public void Tutorial()
+    {
+        SceneManager.LoadScene("Tutorial"); 
         Debug.Log("Loading SampleScene...");
     }
 

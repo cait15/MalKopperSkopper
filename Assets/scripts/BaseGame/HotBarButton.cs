@@ -47,6 +47,7 @@ public class HotbarButton : MonoBehaviour
         
         if (costText != null)
             costText.text = $"R{stats.cost}";
+        Debug.Log($"Cost text set to: {costText.text}");
     }
     
     public void UpdateVisuals(bool unlocked, bool affordable, int playerMoney)
@@ -94,7 +95,7 @@ public class HotbarButton : MonoBehaviour
             }
             else
             {
-                costText.color = Color.white;
+                costText.color = Color.black;
             }
         }
     }

@@ -43,6 +43,7 @@ public class DialogueManager : MonoBehaviour
     private Coroutine typingCoroutine;
     private Coroutine iconAnimationCoroutine;
     private bool isTyping = false;
+    private bool isTutorial = false;
     
     void Awake()
     {
@@ -56,6 +57,9 @@ public class DialogueManager : MonoBehaviour
     {
         if (dialoguePanel != null)
             dialoguePanel.SetActive(false);
+        
+        // Check if we're in tutorial mode
+        isTutorial = TutorialLevelManager.Instance != null && TutorialLevelManager.Instance.isTutorial;
         
         // Setup continue button
         if (continueButton != null)
@@ -78,10 +82,7 @@ public class DialogueManager : MonoBehaviour
         {
             Debug.Log($"No dialogues configured for wave {waveNumber}");
             // Skip to setup if no dialogue exists
-            if (GameManager.Instance != null)
-            {
-                GameManager.Instance.OnDialogueEnded();
-            }
+            OnDialogueEnd();
         }
     }
     
@@ -228,7 +229,7 @@ public class DialogueManager : MonoBehaviour
         {
             // No more dialogue, end the conversation
             CloseDialogue();
-            TriggerNextPhase();
+            OnDialogueEnd();
         }
     }
     
@@ -243,7 +244,7 @@ public class DialogueManager : MonoBehaviour
             // No next node for this choice, end the conversation
             Debug.Log("Choice has no next node, ending dialogue");
             CloseDialogue();
-            TriggerNextPhase();
+            OnDialogueEnd();
         }
     }
     
@@ -270,6 +271,11 @@ public class DialogueManager : MonoBehaviour
         }
     }
     
+    public void ManualCloseDialogue()
+    {
+        CloseDialogue();
+    }
+    
     void CloseDialogue()
     {
         if (dialoguePanel != null)
@@ -289,12 +295,26 @@ public class DialogueManager : MonoBehaviour
         }
     }
     
-    void TriggerNextPhase()
+    void OnDialogueEnd()
     {
-        // Notify GameManager that dialogue ended
-        if (GameManager.Instance != null)
+        // Don't close the panel immediately in tutorial - let it stay visible
+        // Just trigger the next phase
+        
+        // Check if tutorial or regular game
+        if (isTutorial)
         {
-            GameManager.Instance.OnDialogueEnded();
+            if (TutGameManager.Instance != null)
+            {
+                TutGameManager.Instance.OnDialogueEnded();
+            }
+        }
+        else
+        {
+            CloseDialogue();
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.OnDialogueEnded();
+            }
         }
     }
     

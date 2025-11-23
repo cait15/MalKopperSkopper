@@ -23,6 +23,7 @@ public class InputManager : MonoBehaviour
     private GameObject[] placementSpots;
     private Dictionary<GameObject, bool> spotOccupancy = new Dictionary<GameObject, bool>();
     private Dictionary<GameObject, OfficerUnit> spotUnits = new Dictionary<GameObject, OfficerUnit>();
+    private bool isTutorial = false;
     
     void Start()
     {
@@ -32,6 +33,9 @@ public class InputManager : MonoBehaviour
         
         if (uiCamera == null)
             uiCamera = FindObjectOfType<Camera>();
+        
+        // Check if we're in tutorial mode
+        isTutorial = TutorialLevelManager.Instance != null && TutorialLevelManager.Instance.isTutorial;
         
         placementSpots = GameObject.FindGameObjectsWithTag("Placements");
         
@@ -65,10 +69,23 @@ public class InputManager : MonoBehaviour
         }
     }
     
+    GamePhase GetCurrentPhase()
+    {
+        if (isTutorial)
+        {
+            return TutGameManager.Instance != null ? TutGameManager.Instance.currentPhase : GamePhase.Dialogue;
+        }
+        else
+        {
+            return GameManager.Instance != null ? GameManager.Instance.currentPhase : GamePhase.Dialogue;
+        }
+    }
+    
     void Update()
     {
-        if (GameManager.Instance.currentPhase == GamePhase.Dialogue ||
-            GameManager.Instance.currentPhase == GamePhase.Battle)
+        GamePhase currentPhase = GetCurrentPhase();
+        
+        if (currentPhase == GamePhase.Battle)
         {
             if (ghostUnit != null)
             {
@@ -85,18 +102,36 @@ public class InputManager : MonoBehaviour
     
     public void StartPlacingUnit(UnitType unitType)
     {
-        if (GameManager.Instance.currentPhase != GamePhase.Setup)
+        GamePhase currentPhase = GetCurrentPhase();
+        
+        if (currentPhase != GamePhase.Setup && currentPhase != GamePhase.Dialogue)
         {
-            Debug.Log("Can only place units during Setup Phase!");
+            Debug.Log("Can only place units during Setup or Dialogue Phase!");
             return;
         }
         
         UnitStats stats = UnitDefinitions.Instance.GetUnitStats(unitType);
         
-        if (!GameManager.Instance.CanAfford(stats.cost))
+        int playerMoney;
+        if (isTutorial)
         {
-            Debug.Log($"Not enough money! Need R{stats.cost}, have R{GameManager.Instance.playerMoney}");
-            return;
+            if (TutGameManager.Instance == null) return;
+            if (!TutGameManager.Instance.CanAfford(stats.cost))
+            {
+                Debug.Log($"Not enough money! Need R{stats.cost}, have R{TutGameManager.Instance.playerMoney}");
+                return;
+            }
+            playerMoney = TutGameManager.Instance.playerMoney;
+        }
+        else
+        {
+            if (GameManager.Instance == null) return;
+            if (!GameManager.Instance.CanAfford(stats.cost))
+            {
+                Debug.Log($"Not enough money! Need R{stats.cost}, have R{GameManager.Instance.playerMoney}");
+                return;
+            }
+            playerMoney = GameManager.Instance.playerMoney;
         }
         
         selectedUnitType = unitType;
@@ -217,6 +252,7 @@ public class InputManager : MonoBehaviour
     
         return Vector3.zero;
     }
+    
     void HandleUnitPlacement()
     {
         if (Input.GetMouseButtonDown(1) && isPlacingUnit)
@@ -261,14 +297,30 @@ public class InputManager : MonoBehaviour
             return;
         }
         
-        if (!GameManager.Instance.CanAfford(stats.cost))
+        // Check affordability based on game mode
+        if (isTutorial)
         {
-            Debug.Log("Not enough money!");
-            CancelPlacement();
-            return;
+            if (TutGameManager.Instance == null) return;
+            if (!TutGameManager.Instance.CanAfford(stats.cost))
+            {
+                Debug.Log("Not enough money!");
+                CancelPlacement();
+                return;
+            }
+            TutGameManager.Instance.SpendMoney(stats.cost);
+            TutGameManager.Instance.RegisterUnit(null); // Will be set below
         }
-        
-        GameManager.Instance.SpendMoney(stats.cost);
+        else
+        {
+            if (GameManager.Instance == null) return;
+            if (!GameManager.Instance.CanAfford(stats.cost))
+            {
+                Debug.Log("Not enough money!");
+                CancelPlacement();
+                return;
+            }
+            GameManager.Instance.SpendMoney(stats.cost);
+        }
         
         Vector3 spawnPos = placementSpot.transform.position;
         spawnPos.y = placementHeight;

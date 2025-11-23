@@ -53,15 +53,49 @@ public class EnemySpawner : MonoBehaviour
     public void StartWave(int waveNumber)
     {
         if (isSpawning || gameOver) return;
-        
+    
+        // Check if tutorial is active
+        if (TutorialLevelManager.Instance != null && TutorialLevelManager.Instance.isTutorial)
+        {
+            StartTutorialWave();
+            return;
+        }
+    
         currentWave = GetWaveConfiguration(waveNumber);
         enemiesSpawned = 0;
         enemiesAlive = 0;
         enemiesReachedEnd = 0;
-        
+    
         Debug.Log($"Starting {currentWave.description}");
-        
+    
         StartCoroutine(SpawnWave());
+    }
+    
+    public void StartTutorialWave()
+    {
+        if (isSpawning || gameOver) return;
+    
+        currentWave = GetTutorialWaveConfiguration();
+        enemiesSpawned = 0;
+        enemiesAlive = 0;
+        enemiesReachedEnd = 0;
+    
+        Debug.Log($"Starting {currentWave.description}");
+    
+        StartCoroutine(SpawnWave());
+    }
+
+    WaveConfiguration GetTutorialWaveConfiguration()
+    {
+        WaveConfiguration config = new WaveConfiguration();
+        config.waveNumber = 1;
+        config.description = "Tutorial Wave: Easy Introduction";
+        config.enemyTypes = new List<EnemyType> { EnemyType.MeleeV1 };
+        config.enemyCount = 5;
+        config.spawnInterval = 3.0f;
+        config.hasBoss = false;
+    
+        return config;
     }
     
     WaveConfiguration GetWaveConfiguration(int waveNumber)
@@ -186,11 +220,14 @@ public class EnemySpawner : MonoBehaviour
         // Spawn boss at the end if this is a boss wave
         if (currentWave.hasBoss)
         {
+            Debug.Log("Boss wave detected, spawning boss in 2 seconds...");
             yield return new WaitForSeconds(2f);
             SpawnBoss();
+            Debug.Log("Boss spawn complete!");
         }
         
         isSpawning = false;
+        Debug.Log($"Wave spawn complete. isSpawning set to false. EnemiesAlive: {enemiesAlive}");
     }
     
     void SpawnEnemy()
@@ -232,6 +269,8 @@ public class EnemySpawner : MonoBehaviour
     
     void SpawnBoss()
     {
+        Debug.Log($"SpawnBoss called! bossPrefab null: {bossPrefab == null}, spawnerCount: {spawnerObjects.Count}");
+        
         if (spawnerObjects.Count == 0)
         {
             Debug.LogError("No spawner objects available for boss!");
@@ -257,7 +296,11 @@ public class EnemySpawner : MonoBehaviour
             boss.enemyType = EnemyType.Boss;
             ConfigureBossStats(boss, currentWave.waveNumber);
             enemiesAlive++;
-            Debug.Log($"<color=red>BOSS SPAWNED!</color>");
+            Debug.Log($"<color=red>BOSS SPAWNED! Wave {currentWave.waveNumber}</color>");
+        }
+        else
+        {
+            Debug.LogError("Boss prefab doesn't have Enemy component!");
         }
     }
 
@@ -286,7 +329,7 @@ public class EnemySpawner : MonoBehaviour
         {
             case EnemyType.MeleeV1:
                 enemy.health = 50 + (waveNumber * 8);
-                enemy.speed = 3.5f;
+                enemy.speed = 5f;
                 enemy.damage = 3 + (waveNumber * 2);
                 enemy.moneyReward = 50;
                 enemy.attackRange = 6f;
@@ -356,9 +399,14 @@ public class EnemySpawner : MonoBehaviour
         {
             Debug.Log($"Wave {currentWave.waveNumber} Complete! Enemies reached tower: {enemiesReachedEnd}");
             
+            // Works with both GameManager and TutGameManager
             if (GameManager.Instance != null)
             {
                 GameManager.Instance.OnWaveComplete();
+            }
+            else if (TutGameManager.Instance != null)
+            {
+                TutGameManager.Instance.OnWaveComplete();
             }
         }
     }
@@ -390,4 +438,4 @@ public class WaveConfiguration
     public float spawnInterval;
     public string description;
     public bool hasBoss;
-} 
+}
