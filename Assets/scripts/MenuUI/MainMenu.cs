@@ -173,6 +173,15 @@ public class UIManager : MonoBehaviour
             });
             Debug.Log("Starting Guide Panel Slide-Out.");
         }
+        else if (settingsPanelAnimator != null && settingsPanel.activeSelf)
+        {
+            mainMenuPanel.SetActive(true);
+            settingsPanelAnimator.SlideOut(() =>
+            {
+                
+            });
+            Debug.Log("Starting Guide Panel Slide-Out.");
+        }
         else
         {
            
