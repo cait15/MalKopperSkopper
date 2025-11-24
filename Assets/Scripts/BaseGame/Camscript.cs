@@ -19,6 +19,13 @@ public class IsometricCameraSetup : MonoBehaviour
     public float minOrthographicSize = 50f;
     public float maxOrthographicSize = 100f;
     
+    [Header("Camera Bounds")]
+    public bool useCameraBounds = true;
+    public float minX = -50f;
+    public float maxX = 50f;
+    public float minZ = -50f;
+    public float maxZ = 50f;
+    
     [Header("Smooth Movement")]
     public bool smoothPan = true;
     public float panSmoothSpeed = 8f;
@@ -98,7 +105,21 @@ public class IsometricCameraSetup : MonoBehaviour
             lookAtCenter = targetLookAtCenter;
         }
         
+        // Clamp camera bounds
+        if (useCameraBounds)
+        {
+            lookAtCenter = ClampCameraPosition(lookAtCenter);
+            targetLookAtCenter = lookAtCenter;
+        }
+        
         SetupIsometricView();
+    }
+    
+    Vector3 ClampCameraPosition(Vector3 pos)
+    {
+        pos.x = Mathf.Clamp(pos.x, minX, maxX);
+        pos.z = Mathf.Clamp(pos.z, minZ, maxZ);
+        return pos;
     }
     
     void SetupIsometricView()
@@ -140,6 +161,14 @@ public class IsometricCameraSetup : MonoBehaviour
         SetupIsometricView();
     }
     
+    public void SetCameraBounds(float minXBound, float maxXBound, float minZBound, float maxZBound)
+    {
+        minX = minXBound;
+        maxX = maxXBound;
+        minZ = minZBound;
+        maxZ = maxZBound;
+    }
+    
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
@@ -154,5 +183,34 @@ public class IsometricCameraSetup : MonoBehaviour
         Gizmos.DrawWireSphere(cameraPos, 2f);
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(lookAtPos, 2f);
+        
+        // Draw bounds
+        if (useCameraBounds)
+        {
+            Gizmos.color = Color.cyan;
+            Vector3 boundsCenter = new Vector3((minX + maxX) / 2, 0, (minZ + maxZ) / 2);
+            Vector3 boundsSize = new Vector3(maxX - minX, 0.1f, maxZ - minZ);
+            DrawBounds(boundsCenter, boundsSize);
+        }
+    }
+    
+    void DrawBounds(Vector3 center, Vector3 size)
+    {
+        Vector3 halfSize = size / 2;
+        
+        // Draw the four corners
+        Vector3[] corners = new Vector3[4]
+        {
+            center + new Vector3(-halfSize.x, 0, -halfSize.z),
+            center + new Vector3(halfSize.x, 0, -halfSize.z),
+            center + new Vector3(halfSize.x, 0, halfSize.z),
+            center + new Vector3(-halfSize.x, 0, halfSize.z)
+        };
+        
+        // Draw lines connecting corners
+        Gizmos.DrawLine(corners[0], corners[1]);
+        Gizmos.DrawLine(corners[1], corners[2]);
+        Gizmos.DrawLine(corners[2], corners[3]);
+        Gizmos.DrawLine(corners[3], corners[0]);
     }
 }
