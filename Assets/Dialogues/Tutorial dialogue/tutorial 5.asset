@@ -19,4 +19,5 @@ MonoBehaviour:
   animatedSprites:
   - {fileID: 21300000, guid: a3e7caae1ba990a439f4a512fc994967, type: 3}
   animationSpeed: 0.75
+  nodeAudio: {fileID: 8300000, guid: 40fccc6ea57251f41aa8d31ec762430a, type: 3}
   isEndDialogue: 1

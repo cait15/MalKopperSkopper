@@ -1,4 +1,4 @@
-// ============ UPDATED InputManager.cs ============
+
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
@@ -383,12 +383,5 @@ public class InputManager : MonoBehaviour
         Debug.Log($"Selected: {unit.stats.unitName} - Health: {unit.currentHealth}/{unit.stats.health}");
     }
     
-    void OnGUI()
-    {
-        if (isPlacingUnit)
-        {
-            GUI.skin.label.fontSize = 16;
-            GUI.Label(new Rect(Screen.width / 2 - 150, Screen.height - 50, 300, 30), "Right-click or ESC to cancel");
-        }
-    }
+   
 }

@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: tutorial 1
   m_EditorClassIdentifier: Assembly-CSharp::DialogueNode
   dialogueText: During this level, we will teach you how to play the game
-  characterName: Old man
+  characterName: MR KHUMALO
   choices: []
   nextDefaultNode: {fileID: 11400000, guid: 031b8c48ada59a5409fc662aa2839ff1, type: 2}
   animatedSprites:
   - {fileID: 21300000, guid: 15d72da78f90acc44a517ef0c7124983, type: 3}
   animationSpeed: 0.75
+  nodeAudio: {fileID: 0}
   isEndDialogue: 0
