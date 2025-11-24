@@ -21,8 +21,9 @@ public class MenuAnimator : MonoBehaviour
 
     void Start()
     {
-        AnimateTitle();
         AnimateButtons();
+        AnimateTitle();
+        
     }
 
     void AnimateTitle()
