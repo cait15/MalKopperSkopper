@@ -62,7 +62,7 @@ public class UnitDefinitions : MonoBehaviour
                     unitType = UnitType.TankOfficer,
                     unitName = "Tank Officer",
                     health = 150,
-                    speed = 25f,
+                    speed = 10f,
                     attackRange = 8f,
                     damage = 10,
                     cost = 1000,

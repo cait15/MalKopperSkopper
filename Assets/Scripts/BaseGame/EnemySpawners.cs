@@ -108,7 +108,7 @@ public class EnemySpawner : MonoBehaviour
         {
             case 1:
                 config.description = "Wave 1: Introduction - Melee Enemies V1";
-                config.enemyTypes = new List<EnemyType> { EnemyType.Ranged };
+                config.enemyTypes = new List<EnemyType> { EnemyType.MeleeV1 };
                 config.enemyCount = 10;
                 config.spawnInterval = 2.0f;
                 break;
@@ -327,27 +327,27 @@ public class EnemySpawner : MonoBehaviour
         switch (type)
         {
             case EnemyType.MeleeV1:
-                enemy.health = 50 + (waveNumber * 8);
+                enemy.health = 50 + (waveNumber );
                 enemy.speed = 5f;
-                enemy.damage = 3 + (waveNumber * 2);
+                enemy.damage = 10 ;
                 enemy.moneyReward = 50;
                 enemy.attackRange = 6f;
                 enemy.attackCooldown = 1.2f;
                 break;
                 
             case EnemyType.Tank:
-                enemy.health = 120 + (waveNumber * 15);
-                enemy.speed = 2f;
-                enemy.damage = 20 + (waveNumber * 3);
+                enemy.health = 120 + (waveNumber );
+                enemy.speed = 5f;
+                enemy.damage = 6 ;
                 enemy.moneyReward = 100;
                 enemy.attackRange = 6f;
                 enemy.attackCooldown = 2f;
                 break;
                 
             case EnemyType.Ranged:
-                enemy.health = 60 + (waveNumber * 6);
+                enemy.health = 60 + (waveNumber);
                 enemy.speed = 4.5f;
-                enemy.damage = 15 + (waveNumber * 2);
+                enemy.damage = 15 ;
                 enemy.moneyReward = 75;
                 enemy.attackRange = 8f;
                 enemy.attackCooldown = 1.5f;

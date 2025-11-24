@@ -225,9 +225,9 @@ public class GameManager : MonoBehaviour
         switch (wave)
         {
             case 2:
-                if (!unlockedUnits.Contains(UnitType.RangedOfficer))
+                if (!unlockedUnits.Contains(UnitType.TankOfficer))
                 {
-                    unlockedUnits.Add(UnitType.RangedOfficer);
+                    unlockedUnits.Add(UnitType.TankOfficer);
                     Debug.Log("<color=yellow>[UNLOCK] Tank Officer Unlocked!</color>");
                 }
                 else
