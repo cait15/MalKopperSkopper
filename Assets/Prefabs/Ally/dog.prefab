@@ -220,7 +220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OfficerUnit
   stats:
-    unitType: 1
+    unitType: 3
     unitName: 
     health: 0
     speed: 0
