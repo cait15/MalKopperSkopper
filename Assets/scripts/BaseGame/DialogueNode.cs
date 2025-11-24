@@ -17,6 +17,9 @@ public class DialogueNode : ScriptableObject
     public List<Sprite> animatedSprites; // List of sprites for animation
     public float animationSpeed = 0.75f;
     
+    [Header("Audio")]
+    public AudioClip nodeAudio; 
+    
     [Header("Phase Control")]
     public bool isEndDialogue = false; // When true, triggers next phase
 }

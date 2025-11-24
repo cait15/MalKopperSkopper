@@ -1822,7 +1822,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -5.369995, y: 0.83999634}
+  m_AnchoredPosition: {x: -5.369873, y: 0.8400879}
   m_SizeDelta: {x: -77.2, y: -91.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1570763185
@@ -2450,7 +2450,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -123.2, y: 45.600006}
+  m_AnchoredPosition: {x: -123.20001, y: 45.600006}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1906373905
@@ -2719,11 +2719,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2874914117819649129, guid: b4e5a73d97f28244e930b0858ab7f208, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3127299988567165612, guid: b4e5a73d97f28244e930b0858ab7f208, type: 3}
       propertyPath: m_LocalPosition.x
       value: -254.6
       objectReference: {fileID: 0}
+    - target: {fileID: 5434943326102969525, guid: b4e5a73d97f28244e930b0858ab7f208, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6230291906669791907, guid: b4e5a73d97f28244e930b0858ab7f208, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6549080125688044445, guid: b4e5a73d97f28244e930b0858ab7f208, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7965464428148109421, guid: b4e5a73d97f28244e930b0858ab7f208, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8220895636142049267, guid: b4e5a73d97f28244e930b0858ab7f208, type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}

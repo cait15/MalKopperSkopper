@@ -163,15 +163,20 @@ public class DialogueManager : MonoBehaviour
         if (typingCoroutine != null)
             StopCoroutine(typingCoroutine);
         
-        typingCoroutine = StartCoroutine(TypeText(node.dialogueText));
+        typingCoroutine = StartCoroutine(TypeText(node.dialogueText, node.nodeAudio));
     }
     
-    IEnumerator TypeText(string fullText)
+    IEnumerator TypeText(string fullText, AudioClip nodeAudio)
     {
         isTyping = true;
         dialogueText.text = "";
         
-        if (dialogueStartSound != null && audioSource != null)
+        // Play node audio if assigned, otherwise play dialogue start sound
+        if (nodeAudio != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(nodeAudio);
+        }
+        else if (dialogueStartSound != null && audioSource != null)
         {
             audioSource.PlayOneShot(dialogueStartSound);
         }
@@ -242,8 +247,6 @@ public class DialogueManager : MonoBehaviour
     
     public void OnChoiceSelected(DialogueChoice choice)
     {
-        
-        
         if (choice.nextNode != null)
         {
             DisplayNode(choice.nextNode);
