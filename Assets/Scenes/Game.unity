@@ -1468,7 +1468,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a9b997f0c7ab3b644b044e61cf819661, type: 2}
   - {fileID: 11400000, guid: 3ac0c32661dfc414cb88491c05b9e924, type: 2}
   - {fileID: 11400000, guid: 67967b64ac877174c93d959a872c314a, type: 2}
-  defeatDialogues: []
+  defeatDialogues:
+  - {fileID: 11400000, guid: f5101a3c2f3db76429d943bf1b0b3dd3, type: 2}
   clickSound: {fileID: 8300000, guid: dd9433ec9a45ffa4689590b8fbcc4913, type: 3}
   audioSource: {fileID: 1572374169}
   dialogueStartSound: {fileID: 8300000, guid: 85a37dac76e991c4bb66afa36be35f98, type: 3}
