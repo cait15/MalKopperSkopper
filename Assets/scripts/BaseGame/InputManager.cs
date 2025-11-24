@@ -14,6 +14,7 @@ public class InputManager : MonoBehaviour
     private SpriteRenderer ghostRenderer;
     private UnitType selectedUnitType;
     private bool isPlacingUnit = false;
+    public float ghostScale = 1f;  
     
     [Header("Selected Unit")]
     private OfficerUnit selectedUnit;
@@ -152,6 +153,7 @@ public class InputManager : MonoBehaviour
         if (prefab == null) return;
     
         ghostUnit = new GameObject("GhostUnit");
+        ghostUnit.transform.localScale = Vector3.one * ghostScale;  // APPLY SCALE HERE
         ghostRenderer = ghostUnit.AddComponent<SpriteRenderer>();
     
         SpriteRenderer prefabRenderer = prefab.GetComponent<SpriteRenderer>();
