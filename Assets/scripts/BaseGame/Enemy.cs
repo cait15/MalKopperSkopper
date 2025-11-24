@@ -44,6 +44,7 @@ public class Enemy : MonoBehaviour
     [Header("References")]
     public SpriteRenderer spriteRenderer;
     public Animator animator;
+    public HealthBar hpBAR;
     
     private GameObject towerTarget;
     private List<PathNode> pathNodeList;
@@ -313,7 +314,7 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int damageAmount)
     {
         currentHealth -= damageAmount;
-        
+        hpBAR.UpdateHealthBar(health, currentHealth);
         StartCoroutine(DamageFlash());
         
         if (currentHealth <= 0)

@@ -128,6 +128,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ea6724bcd564592a306e2432369fed8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  isMiniBoss: 0
+  miniBossHealthMultiplier: 3
+  miniBossDamageMultiplier: 2
+  miniBossSpeedMultiplier: 2
   enemyType: 1
   health: 50
   speed: 2
@@ -135,10 +139,12 @@ MonoBehaviour:
   moneyReward: 50
   attackRange: 1.5
   attackCooldown: 1
+  bulletSprite: {fileID: 0}
+  bulletScale: 0.8
   isAlive: 1
   spriteRenderer: {fileID: 0}
   animator: {fileID: 0}
-  healthBar: {fileID: 7995861139840083976}
+  hpBAR: {fileID: 7995861139840083976}
 --- !u!54 &-6374376073586498710
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -81,7 +81,7 @@ public class UIManager : MonoBehaviour
     
     public void StartGame()
     {
-        SceneManager.LoadScene("SampleScene"); 
+        SceneManager.LoadScene("Game"); 
         Debug.Log("Loading SampleScene...");
     }
     public void Tutorial()
