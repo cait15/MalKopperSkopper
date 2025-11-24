@@ -162,18 +162,8 @@ public class UIManager : MonoBehaviour
   
     public void OpenMainMenu()
     {
-        settingsPanel.SetActive(false);
-
-        if (guidePanelAnimator != null && guidePanel.activeSelf)
-        {
-            mainMenuPanel.SetActive(true);
-            guidePanelAnimator.SlideOut(() =>
-            {
-                
-            });
-            Debug.Log("Starting Guide Panel Slide-Out.");
-        }
-        else if (settingsPanelAnimator != null && settingsPanel.activeSelf)
+        
+        if (settingsPanelAnimator != null && settingsPanel.activeSelf)
         {
             mainMenuPanel.SetActive(true);
             settingsPanelAnimator.SlideOut(() =>
@@ -182,9 +172,17 @@ public class UIManager : MonoBehaviour
             });
             Debug.Log("Starting Guide Panel Slide-Out.");
         }
-        else
+        else if (guidePanelAnimator != null && guidePanel.activeSelf)
         {
-           
+            mainMenuPanel.SetActive(true);
+            guidePanelAnimator.SlideOut(() =>
+            {
+                
+            });
+            Debug.Log("Starting Guide Panel Slide-Out.");
+        }
+        else
+        { settingsPanel.SetActive(false);
             guidePanel.SetActive(false);
             mainMenuPanel.SetActive(true);
             Debug.Log("Returning to Main Menu.");

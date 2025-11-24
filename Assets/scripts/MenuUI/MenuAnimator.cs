@@ -21,9 +21,8 @@ public class MenuAnimator : MonoBehaviour
 
     void Start()
     {
-        AnimateButtons();
         AnimateTitle();
-        
+        AnimateButtons();
     }
 
     void AnimateTitle()
@@ -36,45 +35,49 @@ public class MenuAnimator : MonoBehaviour
 
         Vector3 originalScale = titleRectTransform.localScale;
         
-        // Initial setup for the load-in jiggle
-        titleRectTransform.localScale = Vector3.one * initialScale; 
+        titleRectTransform.localScale = Vector3.one * initialScale;
         
-        // Load-in Jiggle Animation
         LeanTween.scale(titleRectTransform, originalScale * (1f + jiggleAmount), duration)
-            .setEase(LeanTweenType.easeOutElastic) 
-            .setOvershoot(jiggleElasticity) 
+            .setEase(LeanTweenType.easeOutElastic)
+            .setOvershoot(jiggleElasticity)
             .setOnComplete(() =>
             {
-                // Final snap back to original size after jiggle
                 LeanTween.scale(titleRectTransform, originalScale, 0.2f)
-                .setOnComplete(() => 
-                {
-                    // Start Continuous Throbbing Loop
-                    LeanTween.scale(titleRectTransform, originalScale * (1f + throbbingScaleAmount), throbbingDuration)
-                        .setEase(LeanTweenType.easeInOutSine) // Smooth pulse effect
-                        .setLoopPingPong(); // Makes it scale up, then down, then up, forever
-                });
+                    .setOnComplete(() =>
+                    {
+                        LeanTween.scale(titleRectTransform, originalScale * (1f + throbbingScaleAmount), throbbingDuration)
+                            .setEase(LeanTweenType.easeInOutSine)
+                            .setLoopPingPong();
+                    });
             });
     }
 
     void AnimateButtons()
     {
-        float canvasHeight = GetComponentInParent<Canvas>().GetComponent<RectTransform>().rect.height;
-        
+        Canvas canvas = GetComponentInParent<Canvas>();
+        if (canvas == null)
+        {
+            Debug.LogError("MenuAnimator must be a child of a Canvas!");
+            return;
+        }
+
+        float canvasHeight = canvas.GetComponent<RectTransform>().rect.height;
+
         for (int i = 0; i < buttons.Count; i++)
         {
             RectTransform button = buttons[i];
             if (button == null) continue;
 
-            Vector3 finalPosition = button.anchoredPosition; 
+            // Cancel all existing tweens to prevent conflicts
+            LeanTween.cancel(button.gameObject, false);
             
-            button.anchoredPosition = finalPosition + Vector3.up * canvasHeight; 
+            Vector3 finalPosition = button.anchoredPosition;
             
-            button.gameObject.AddComponent<ButtonHoverScaler>();
+            button.anchoredPosition = finalPosition + Vector3.up * canvasHeight;
             
             LeanTween.move(button, finalPosition, buttonDropDuration)
-                .setEase(LeanTweenType.easeOutQuad) 
-                .setDelay(i * dropDelay); 
+                .setEase(LeanTweenType.easeOutQuad)
+                .setDelay(i * dropDelay);
         }
     }
 }
