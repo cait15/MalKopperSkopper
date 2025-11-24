@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour
     public Toggle fullscreenToggle;
     public PanelAnimator guidePanelAnimator;
     public PanelAnimator settingsPanelAnimator;
+    public AudioSource audioSource;
     
     [Header("Animation Delays")]
     public float mainMenuDeactivationDelay = 0.4f;
@@ -111,18 +112,20 @@ public class UIManager : MonoBehaviour
     
     public void StartGame()
     {
+        audioSource.Play();
         SceneManager.LoadScene("Game"); 
         Debug.Log("Loading SampleScene...");
     }
     public void Tutorial()
     {
+        audioSource.Play();
         SceneManager.LoadScene("Tutorial"); 
         Debug.Log("Loading SampleScene...");
     }
 
     public void OpenSettings()
     {
-        
+        audioSource.Play();
         if (settingsPanelAnimator != null)
         {
             StartCoroutine(DeactivateMainMenuAfterDelay(settingsPanelAnimator));
@@ -143,6 +146,7 @@ public class UIManager : MonoBehaviour
     
     public void OpenGuide()
     {
+        audioSource.Play();
         if (guidePanelAnimator != null)
         {
             StartCoroutine(DeactivateMainMenuAfterDelay(guidePanelAnimator));
@@ -162,7 +166,7 @@ public class UIManager : MonoBehaviour
   
     public void OpenMainMenu()
     {
-        
+          
         if (settingsPanelAnimator != null && settingsPanel.activeSelf)
         {
             mainMenuPanel.SetActive(true);
@@ -170,6 +174,7 @@ public class UIManager : MonoBehaviour
             {
                 
             });
+            audioSource.Play(); 
             Debug.Log("Starting Guide Panel Slide-Out.");
         }
         else if (guidePanelAnimator != null && guidePanel.activeSelf)
@@ -179,6 +184,7 @@ public class UIManager : MonoBehaviour
             {
                 
             });
+            audioSource.Play(); 
             Debug.Log("Starting Guide Panel Slide-Out.");
         }
         else
@@ -191,6 +197,7 @@ public class UIManager : MonoBehaviour
 
     public void ExitGame()
     {
+        audioSource.Play();
         Debug.Log("Exiting game...");
         Application.Quit();
 
