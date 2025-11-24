@@ -95,7 +95,7 @@ public class HotbarButton : MonoBehaviour
             }
             else
             {
-                costText.color = Color.black;
+                costText.color = Color.white;
             }
         }
     }
