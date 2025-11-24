@@ -1611,6 +1611,7 @@ GameObject:
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
   - component: {fileID: 330585548}
+  - component: {fileID: 330585549}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1762,6 +1763,103 @@ MonoBehaviour:
   maxOrthographicSize: 50
   smoothPan: 1
   panSmoothSpeed: 8
+--- !u!82 &330585549
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 24af8a55c4301d344b8ef890452e34a0, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &362840544
 GameObject:
   m_ObjectHideFlags: 0
@@ -6364,7 +6462,7 @@ MonoBehaviour:
   meleeOfficerV1Button: {fileID: 649460544}
   tankOfficerButton: {fileID: 567728580}
   rangedOfficerButton: {fileID: 248616136}
-  meleeOfficerV2Button: {fileID: 248616136}
+  dogButton: {fileID: 0}
   attackBuffButton: {fileID: 650830838}
   healBuffButton: {fileID: 978963522}
   attackBuffDamage: 15
@@ -7635,6 +7733,7 @@ MonoBehaviour:
   defeatDialogues: []
   clickSound: {fileID: 0}
   audioSource: {fileID: 0}
+  dialogueStartSound: {fileID: 0}
 --- !u!4 &1612018485
 Transform:
   m_ObjectHideFlags: 0
@@ -9600,7 +9699,7 @@ MonoBehaviour:
   meleeOfficerV1Prefab: {fileID: 6586291826219452628, guid: 610ef47dc3b80954cb94ad0a3e5a6c96, type: 3}
   tankOfficerPrefab: {fileID: 8058265899361535435, guid: f5b96624832b7d54592ef1b1db97c369, type: 3}
   rangedOfficerPrefab: {fileID: 8439395691702297250, guid: 05a73dbe28f32414297b8c564d90708b, type: 3}
-  meleeOfficerV2Prefab: {fileID: 6586291826219452628, guid: 610ef47dc3b80954cb94ad0a3e5a6c96, type: 3}
+  dogPrefab: {fileID: 0}
 --- !u!4 &1866277006
 Transform:
   m_ObjectHideFlags: 0

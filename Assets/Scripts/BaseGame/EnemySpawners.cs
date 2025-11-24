@@ -349,7 +349,7 @@ public class EnemySpawner : MonoBehaviour
                 enemy.speed = 4.5f;
                 enemy.damage = 15 + (waveNumber * 2);
                 enemy.moneyReward = 75;
-                enemy.attackRange = 16f;
+                enemy.attackRange = 8f;
                 enemy.attackCooldown = 1.5f;
                 break;
                 

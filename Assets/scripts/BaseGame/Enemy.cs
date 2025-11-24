@@ -45,6 +45,12 @@ public class Enemy : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public Animator animator;
     public HealthBar hpBAR;
+    public AudioSource audioSource;
+    
+    [Header("Audio")]
+    public AudioClip bulletFireSound;
+    public AudioClip punchSound;
+    public AudioClip bossAlertSound;
     
     private GameObject towerTarget;
     private List<PathNode> pathNodeList;
@@ -65,6 +71,11 @@ public class Enemy : MonoBehaviour
         
         if (spriteRenderer == null)
             spriteRenderer = GetComponent<SpriteRenderer>();
+        
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
         
         towerTarget = GameObject.FindGameObjectWithTag("Tower");
         if (towerTarget == null)
@@ -92,6 +103,11 @@ public class Enemy : MonoBehaviour
             {
                 currentTargetNode = pathNodeList[currentPathIndex];
             }
+        }
+        
+        if (enemyType == EnemyType.Boss && bossAlertSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(bossAlertSound);
         }
     }
 
@@ -252,10 +268,18 @@ public class Enemy : MonoBehaviour
             if (enemyType == EnemyType.Ranged)
             {
                 FireBullet(damage);
+                if (bulletFireSound != null && audioSource != null)
+                {
+                    audioSource.PlayOneShot(bulletFireSound);
+                }
             }
             else
             {
                 currentTarget.TakeDamage(damage);
+                if (punchSound != null && audioSource != null)
+                {
+                    audioSource.PlayOneShot(punchSound);
+                }
             }
             
             if (animator != null)

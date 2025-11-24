@@ -38,6 +38,8 @@ public class DialogueManager : MonoBehaviour
     [Header("Audio")]
     public AudioClip clickSound;
     public AudioSource audioSource;
+    public AudioClip dialogueStartSound;
+    
     
     private DialogueNode currentNode;
     private Coroutine typingCoroutine;
@@ -169,6 +171,11 @@ public class DialogueManager : MonoBehaviour
         isTyping = true;
         dialogueText.text = "";
         
+        if (dialogueStartSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(dialogueStartSound);
+        }
+        
         foreach (char c in fullText)
         {
             dialogueText.text += c;
@@ -235,6 +242,8 @@ public class DialogueManager : MonoBehaviour
     
     public void OnChoiceSelected(DialogueChoice choice)
     {
+        
+        
         if (choice.nextNode != null)
         {
             DisplayNode(choice.nextNode);

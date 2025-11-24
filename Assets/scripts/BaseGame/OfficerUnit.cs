@@ -26,6 +26,11 @@ public class OfficerUnit : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public Animator animator;
     public HealthBar healthBar;
+    public AudioSource audioSource;
+    
+    [Header("Audio")]
+    public AudioClip bulletFireSound;
+    public AudioClip punchSound;
     
     void Start()
     {
@@ -36,6 +41,11 @@ public class OfficerUnit : MonoBehaviour
         }
         
         currentHealth = stats.health;
+        
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+            audioSource = gameObject.AddComponent<AudioSource>();
         
         if (GameManager.Instance != null)
         {
@@ -132,10 +142,18 @@ public class OfficerUnit : MonoBehaviour
         if (stats.unitType == UnitType.RangedOfficer)
         {
             FireBullet(totalDamage);
+            if (bulletFireSound != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(bulletFireSound);
+            }
         }
         else
         {
             currentTarget.TakeDamage(totalDamage);
+            if (punchSound != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(punchSound);
+            }
         }
         
         if (animator != null)
