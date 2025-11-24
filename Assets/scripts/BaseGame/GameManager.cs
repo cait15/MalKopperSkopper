@@ -45,6 +45,10 @@ public class GameManager : MonoBehaviour
     private float phaseTimer = 0f;
     private bool waveInProgress = false;
     private bool waitingForDialogue = false;
+    
+    public delegate void OnDamageTrigger();
+    public static event OnDamageTrigger OnDamagedTriggered;
+  
 
     void Awake()
     {
@@ -316,6 +320,7 @@ public class GameManager : MonoBehaviour
         playerHealth -= damage;
         UpdateUI();
         Debug.Log($"Tower took {damage} damage! Health: {playerHealth}");
+        OnDamagedTriggered?.Invoke();
 
         if (playerHealth <= 0)
         {

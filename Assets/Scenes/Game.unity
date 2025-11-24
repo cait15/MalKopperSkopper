@@ -399,7 +399,7 @@ MonoBehaviour:
   targetOffset: {x: 0, y: 0, z: 0}
   allowDragPan: 1
   dragSensitivity: 1
-  zoomSensitivity: 2
+  zoomSensitivity: 4
   minOrthographicSize: 5.07
   maxOrthographicSize: 50
   useCameraBounds: 1
@@ -799,7 +799,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 483219290}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2425,12 +2425,12 @@ MonoBehaviour:
   currentPhase: 0
   currentWave: 0
   playerHealth: 90
-  playerMoney: 3589
+  playerMoney: 4000
   isGameOver: 0
   totalWaves: 10
   setupPhaseDuration: 30
   victoryPhaseDuration: 5
-  moneyPerWaveComplete: 2000
+  moneyPerWaveComplete: 5000
   moneyPerEnemyKill: 25
   unlockedUnits: 
   healthText: {fileID: 1073297729137398122}
@@ -2819,6 +2819,74 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1934878725}
   m_CullTransparentMesh: 1
+--- !u!1 &2054306214
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2054306217}
+  - component: {fileID: 2054306216}
+  - component: {fileID: 2054306215}
+  m_Layer: 0
+  m_Name: Damage EFfect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2054306215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2054306214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 84a0724cbea3a7b4998949090e8e8882, type: 2}
+--- !u!114 &2054306216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2054306214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4b89b25b05c428c9b928d6cd72dafa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HitFlashEffectVignetteOnly
+  volumeProfileAsset: {fileID: 11400000, guid: 84a0724cbea3a7b4998949090e8e8882, type: 2}
+  globalVolume: {fileID: 2054306215}
+  maxIntensity: 0.7
+  flashDuration: 0.5
+  fadeDuration: 2
+  pulseFrequency: 10
+--- !u!4 &2054306217
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2054306214}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 90.11555, y: -1.87925, z: -74.65182}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!222 &1655666542715780
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3119,12 +3187,12 @@ RectTransform:
   - {fileID: 3456060798974770462}
   - {fileID: 1391015266492884050}
   - {fileID: 184863696}
+  - {fileID: 483219291}
   - {fileID: 7220186027709369684}
   - {fileID: 9210429889295490240}
   - {fileID: 5723827341055523181}
   - {fileID: 3561099642974924704}
   - {fileID: 5693965352665725643}
-  - {fileID: 483219291}
   - {fileID: 943394799}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3447,7 +3515,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -1658, y: 180}
+  m_AnchoredPosition: {x: -1594.7, y: 180}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2315869316783627515
@@ -3730,7 +3798,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -111.7839, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -4113,7 +4181,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.8}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5461,7 +5529,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -1662, y: 378}
+  m_AnchoredPosition: {x: -1605, y: 378}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &9004537054346532100
@@ -5798,3 +5866,4 @@ SceneRoots:
   - {fileID: 765463431}
   - {fileID: 5388972483694962449}
   - {fileID: 615088977}
+  - {fileID: 2054306217}

@@ -22,7 +22,7 @@ public class MenuAnimator : MonoBehaviour
     void Start()
     {
         AnimateTitle();
-        AnimateButtons();
+        //AnimateButtons();
     }
 
     void AnimateTitle()
