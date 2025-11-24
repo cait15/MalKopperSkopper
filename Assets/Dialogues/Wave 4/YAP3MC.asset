@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec02e0ab42e53de4b9785d62f88c63fa, type: 3}
-  m_Name: MKTALKS
+  m_Name: YAP3MC
   m_EditorClassIdentifier: Assembly-CSharp::DialogueNode
-  dialogueText: "\"You\u2019ve finally arrived.\""
-  characterName: MR KHUMALO
+  dialogueText: '"I didn''t order anything?"'
+  characterName: CHIEF
   choices: []
-  nextDefaultNode: {fileID: 11400000, guid: 7e54ab808d86e3845ba4487ba10b479b, type: 2}
+  nextDefaultNode: {fileID: 11400000, guid: 88d6240c0389e244b82dd0067b259946, type: 2}
   animatedSprites:
-  - {fileID: 21300000, guid: 15d72da78f90acc44a517ef0c7124983, type: 3}
+  - {fileID: 21300000, guid: a3e7caae1ba990a439f4a512fc994967, type: 3}
   animationSpeed: 0.75
   nodeAudio: {fileID: 0}
   isEndDialogue: 0

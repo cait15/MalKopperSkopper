@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec02e0ab42e53de4b9785d62f88c63fa, type: 3}
-  m_Name: MKTALKS
+  m_Name: MKTALKING4
   m_EditorClassIdentifier: Assembly-CSharp::DialogueNode
-  dialogueText: "\"You\u2019ve finally arrived.\""
+  dialogueText: "\"You have until sunset, Once you hear the vuvuzela, that\u2019s
+    their signal. They don\u2019t knock. They don\u2019t warn twice.\"\r\n"
   characterName: MR KHUMALO
   choices: []
-  nextDefaultNode: {fileID: 11400000, guid: 7e54ab808d86e3845ba4487ba10b479b, type: 2}
+  nextDefaultNode: {fileID: 11400000, guid: 92c679612dc9e694f8b1e499c447a3f7, type: 2}
   animatedSprites:
   - {fileID: 21300000, guid: 15d72da78f90acc44a517ef0c7124983, type: 3}
   animationSpeed: 0.75

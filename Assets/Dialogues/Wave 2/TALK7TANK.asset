@@ -10,14 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec02e0ab42e53de4b9785d62f88c63fa, type: 3}
-  m_Name: MKTALKS
+  m_Name: TALK7TANK
   m_EditorClassIdentifier: Assembly-CSharp::DialogueNode
-  dialogueText: "\"You\u2019ve finally arrived.\""
-  characterName: MR KHUMALO
+  dialogueText: "\"You're the one in charge? Good. You tell me where to stand, and
+    I\u2019ll make sure no one gets past. I don\u2019t move fast, but I don\u2019t
+    move back either.\""
+  characterName: ???
   choices: []
-  nextDefaultNode: {fileID: 11400000, guid: 7e54ab808d86e3845ba4487ba10b479b, type: 2}
+  nextDefaultNode: {fileID: 0}
   animatedSprites:
-  - {fileID: 21300000, guid: 15d72da78f90acc44a517ef0c7124983, type: 3}
+  - {fileID: 21300000, guid: 3dd4ba8dc802e6f4cbea669d77c391e6, type: 3}
   animationSpeed: 0.75
-  nodeAudio: {fileID: 0}
-  isEndDialogue: 0
+  nodeAudio: {fileID: 8300000, guid: 40fccc6ea57251f41aa8d31ec762430a, type: 3}
+  isEndDialogue: 1

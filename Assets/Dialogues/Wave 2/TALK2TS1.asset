@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ec02e0ab42e53de4b9785d62f88c63fa, type: 3}
-  m_Name: MKTALKS
+  m_Name: TALK2TS1
   m_EditorClassIdentifier: Assembly-CSharp::DialogueNode
-  dialogueText: "\"You\u2019ve finally arrived.\""
-  characterName: MR KHUMALO
+  dialogueText: "\"Eita wena, we saw what you did last night. Not bad for a rookie.
+    But don\u2019t get gassed, champ. We were just warming up.\""
+  characterName: TOKOLOSHE SYNDICATE
   choices: []
-  nextDefaultNode: {fileID: 11400000, guid: 7e54ab808d86e3845ba4487ba10b479b, type: 2}
+  nextDefaultNode: {fileID: 11400000, guid: 4e3eba09567419e458048a45b52eeeb2, type: 2}
   animatedSprites:
-  - {fileID: 21300000, guid: 15d72da78f90acc44a517ef0c7124983, type: 3}
+  - {fileID: 21300000, guid: 220807285182d78469e19460e9ab1920, type: 3}
   animationSpeed: 0.75
   nodeAudio: {fileID: 0}
   isEndDialogue: 0
