@@ -63,8 +63,8 @@ public class UnitDefinitions : MonoBehaviour
                     unitName = "Tank Officer",
                     health = 150,
                     speed = 25f,
-                    attackRange = 3f,
-                    damage = 25,
+                    attackRange = 8f,
+                    damage = 10,
                     cost = 1000,
                     attackCooldown = 2f
                 };
@@ -76,8 +76,8 @@ public class UnitDefinitions : MonoBehaviour
                     unitName = "Ranged Officer",
                     health = 100,
                     speed = 50f,
-                    attackRange = 6f,
-                    damage = 15,
+                    attackRange = 16f,
+                    damage = 20,
                     cost = 2000,
                     attackCooldown = 1.5f
                 };
@@ -89,8 +89,8 @@ public class UnitDefinitions : MonoBehaviour
                     unitName = "Dog",
                     health = 75,
                     speed = 75f,
-                    attackRange = 2f,
-                    damage = 15,
+                    attackRange = 8f,
+                    damage = 25,
                     cost = 800,
                     attackCooldown = 1.2f
                 };

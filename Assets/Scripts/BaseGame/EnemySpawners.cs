@@ -340,7 +340,7 @@ public class EnemySpawner : MonoBehaviour
                 enemy.speed = 2f;
                 enemy.damage = 20 + (waveNumber * 3);
                 enemy.moneyReward = 100;
-                enemy.attackRange = 4.5f;
+                enemy.attackRange = 6f;
                 enemy.attackCooldown = 2f;
                 break;
                 
@@ -349,7 +349,7 @@ public class EnemySpawner : MonoBehaviour
                 enemy.speed = 4.5f;
                 enemy.damage = 15 + (waveNumber * 2);
                 enemy.moneyReward = 75;
-                enemy.attackRange = 6f;
+                enemy.attackRange = 16f;
                 enemy.attackCooldown = 1.5f;
                 break;
                 
@@ -360,10 +360,10 @@ public class EnemySpawner : MonoBehaviour
     void ConfigureBossStats(Enemy boss, int waveNumber)
     {
         // Boss has massive HP
-        boss.health = 500 + (waveNumber * 100);
-        boss.speed = 1.5f;
+        boss.health = 50 * waveNumber;
+        boss.speed = 3f;
         boss.damage = 35 + (waveNumber * 5);
-        boss.moneyReward = 500;
+        boss.moneyReward = 3500;
         boss.attackRange = 4f;
         boss.attackCooldown = 1.5f;
     }
