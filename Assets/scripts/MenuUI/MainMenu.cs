@@ -1,9 +1,10 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using UnityEngine.SceneManagement; // NEW: Added for scene loading
+using UnityEngine.SceneManagement; 
 
 public class UIManager : MonoBehaviour
 {
@@ -16,6 +17,11 @@ public class UIManager : MonoBehaviour
     [Header("Settings UI")]
     public TMP_Dropdown resolutionDropdown;
     public Toggle fullscreenToggle;
+    public PanelAnimator guidePanelAnimator;
+    public PanelAnimator settingsPanelAnimator;
+    
+    [Header("Animation Delays")]
+    public float mainMenuDeactivationDelay = 0.4f;
 
     private Resolution[] predefinedResolutions = new Resolution[]
     {
@@ -35,6 +41,30 @@ public class UIManager : MonoBehaviour
     };
     
     private List<Resolution> availableResolutions;
+    
+    void Awake()
+    {
+        settingsPanel.SetActive(false);
+        guidePanel.SetActive(false);
+        mainMenuPanel.SetActive(true);
+        if (guidePanel != null)
+        {
+            guidePanelAnimator = guidePanel.GetComponent<PanelAnimator>();
+        }
+        
+        if (settingsPanel != null)
+        {
+            settingsPanelAnimator = settingsPanel.GetComponent<PanelAnimator>();
+        }
+        
+    }
+    
+    IEnumerator DeactivateMainMenuAfterDelay(PanelAnimator animator)
+    {
+        animator.SlideIn(); 
+        yield return new WaitForSeconds(mainMenuDeactivationDelay);
+        mainMenuPanel.SetActive(false);
+    }
 
     void Start()
     {
@@ -92,24 +122,64 @@ public class UIManager : MonoBehaviour
 
     public void OpenSettings()
     {
-        mainMenuPanel.SetActive(false);
-        settingsPanel.SetActive(true);
+        
+        if (settingsPanelAnimator != null)
+        {
+            StartCoroutine(DeactivateMainMenuAfterDelay(settingsPanelAnimator));
+            Debug.Log("Starting Guide Panel Slide-In with delayed Main Menu deactivation.");
+        }
+        else
+        {
+            if (settingsPanelAnimator != null)
+            {
+                settingsPanelAnimator.gameObject.SetActive(true);
+            }
+            mainMenuPanel.SetActive(false);
+            Debug.LogError("Settings Panel Animator is not assigned in the Inspector!");
+        }
+        
         Debug.Log("Opening Settings Panel.");
     }
-
+    
     public void OpenGuide()
     {
-        mainMenuPanel.SetActive(false);
-        guidePanel.SetActive(true);
-        Debug.Log("Opening Guide Panel (How to Play).");
+        if (guidePanelAnimator != null)
+        {
+            StartCoroutine(DeactivateMainMenuAfterDelay(guidePanelAnimator));
+            Debug.Log("Starting Guide Panel Slide-In with delayed Main Menu deactivation.");
+        }
+        else
+        {
+            if (guidePanelAnimator != null)
+            {
+                guidePanelAnimator.gameObject.SetActive(true);
+            }
+            mainMenuPanel.SetActive(false);
+            Debug.LogError("Guide Panel Animator is not assigned in the Inspector!");
+        }
     }
 
+  
     public void OpenMainMenu()
     {
         settingsPanel.SetActive(false);
-        guidePanel.SetActive(false);
-        mainMenuPanel.SetActive(true);
-        Debug.Log("Returning to Main Menu.");
+
+        if (guidePanelAnimator != null && guidePanel.activeSelf)
+        {
+            mainMenuPanel.SetActive(true);
+            guidePanelAnimator.SlideOut(() =>
+            {
+                
+            });
+            Debug.Log("Starting Guide Panel Slide-Out.");
+        }
+        else
+        {
+           
+            guidePanel.SetActive(false);
+            mainMenuPanel.SetActive(true);
+            Debug.Log("Returning to Main Menu.");
+        }
     }
 
     public void ExitGame()
@@ -139,4 +209,6 @@ public class UIManager : MonoBehaviour
         Screen.fullScreen = isFullscreen;
         Debug.Log("Fullscreen set to: " + isFullscreen);
     }
+    
 }
+
