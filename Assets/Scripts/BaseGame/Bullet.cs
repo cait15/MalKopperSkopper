@@ -1,4 +1,4 @@
-﻿// ============ BULLET SCRIPT (Standalone) ============
+﻿
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
