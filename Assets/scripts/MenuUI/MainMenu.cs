@@ -126,21 +126,32 @@ public class UIManager : MonoBehaviour
     public void OpenSettings()
     {
         audioSource.Play();
-        if (settingsPanelAnimator != null)
+    
+        // Initialize ResolutionSettings with UI references
+        if (ResolutionSettings.Instance != null)
         {
-            StartCoroutine(DeactivateMainMenuAfterDelay(settingsPanelAnimator));
-            Debug.Log("Starting Guide Panel Slide-In with delayed Main Menu deactivation.");
+            ResolutionSettings.Instance.InitializeResolutionUI(resolutionDropdown, fullscreenToggle);
         }
         else
         {
-            if (settingsPanelAnimator != null)
+            Debug.LogError("ResolutionSettings.Instance is null!");
+        }
+    
+        if (settingsPanelAnimator != null)
+        {
+            StartCoroutine(DeactivateMainMenuAfterDelay(settingsPanelAnimator));
+            Debug.Log("Starting Settings Panel Slide-In with delayed Main Menu deactivation.");
+        }
+        else
+        {
+            if (settingsPanel != null)
             {
-                settingsPanelAnimator.gameObject.SetActive(true);
+                settingsPanel.SetActive(true);
             }
             mainMenuPanel.SetActive(false);
             Debug.LogError("Settings Panel Animator is not assigned in the Inspector!");
         }
-        
+    
         Debug.Log("Opening Settings Panel.");
     }
     
@@ -205,24 +216,5 @@ public class UIManager : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
         #endif
     }
-
-    public void OnResolutionChange(int resolutionIndex)
-    {
-        if (resolutionIndex >= 0 && resolutionIndex < availableResolutions.Count)
-        {
-            Resolution newResolution = availableResolutions[resolutionIndex];
-            
-            Screen.SetResolution(newResolution.width, newResolution.height, Screen.fullScreen);
-            
-            Debug.Log("Set Resolution via Dropdown to: " + newResolution.width + "x" + newResolution.height);
-        }
-    }
-    
-    public void ToggleFullscreen(bool isFullscreen)
-    {
-        Screen.fullScreen = isFullscreen;
-        Debug.Log("Fullscreen set to: " + isFullscreen);
-    }
-    
 }
 
