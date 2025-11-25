@@ -153,7 +153,7 @@ public class InputManager : MonoBehaviour
         if (prefab == null) return;
     
         ghostUnit = new GameObject("GhostUnit");
-        ghostUnit.transform.localScale = Vector3.one * ghostScale;  // APPLY SCALE HERE
+        ghostUnit.transform.localScale = Vector3.one * ghostScale;  
         ghostRenderer = ghostUnit.AddComponent<SpriteRenderer>();
     
         SpriteRenderer prefabRenderer = prefab.GetComponent<SpriteRenderer>();
