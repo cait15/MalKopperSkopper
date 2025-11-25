@@ -360,9 +360,9 @@ public class EnemySpawner : MonoBehaviour
     void ConfigureBossStats(Enemy boss, int waveNumber)
     {
         // Boss has massive HP
-        boss.health = 50 * waveNumber;
+        boss.health = 50 * waveNumber/2;
         boss.speed = 3f;
-        boss.damage = 35 + (waveNumber * 5);
+        boss.damage = 35 + waveNumber;
         boss.moneyReward = 3500;
         boss.attackRange = 4f;
         boss.attackCooldown = 1.5f;

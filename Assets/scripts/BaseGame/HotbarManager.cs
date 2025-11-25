@@ -15,7 +15,7 @@ public class HotbarUI : MonoBehaviour
     public HotbarButton meleeOfficerV1Button;
     public HotbarButton tankOfficerButton;
     public HotbarButton rangedOfficerButton;
-    public HotbarButton dogButton;  // Replaced MeleeOfficerV2
+    public HotbarButton dogButton;  
     
     [Header("Buff Buttons")]
     public HotbarBuffButton attackBuffButton;
@@ -47,12 +47,12 @@ public class HotbarUI : MonoBehaviour
         buttonMap[UnitType.MeleeOfficerV1] = meleeOfficerV1Button;
         buttonMap[UnitType.TankOfficer] = tankOfficerButton;
         buttonMap[UnitType.RangedOfficer] = rangedOfficerButton;
-        buttonMap[UnitType.Dog] = dogButton;  // Replaced MeleeOfficerV2
+        buttonMap[UnitType.Dog] = dogButton;  
         
         meleeOfficerV1Button.Initialize(UnitType.MeleeOfficerV1, OnUnitSelected);
         tankOfficerButton.Initialize(UnitType.TankOfficer, OnUnitSelected);
         rangedOfficerButton.Initialize(UnitType.RangedOfficer, OnUnitSelected);
-        dogButton.Initialize(UnitType.Dog, OnUnitSelected);  // Replaced MeleeOfficerV2
+        dogButton.Initialize(UnitType.Dog, OnUnitSelected); 
         
         buffMap[BuffType.AttackBuff] = attackBuffButton;
         buffMap[BuffType.HealBuff] = healBuffButton;
@@ -61,9 +61,7 @@ public class HotbarUI : MonoBehaviour
         healBuffButton.Initialize(BuffType.HealBuff, OnBuffSelected, $"+{healBuffAmount} Health");
     }
     
-    void Update()
-    {
-    }
+   
     
     public void ForceUpdateAllButtons()
     {
@@ -108,7 +106,7 @@ public class HotbarUI : MonoBehaviour
             }
         }
         
-        // Update buff buttons
+      
         bool attackBuffUnlocked = currentWave >= 3;
         attackBuffButton.UpdateVisuals(attackBuffUnlocked);
         

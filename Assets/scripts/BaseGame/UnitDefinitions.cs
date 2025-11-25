@@ -5,7 +5,7 @@ public enum UnitType
     MeleeOfficerV1,
     TankOfficer,
     RangedOfficer,
-    Dog  // Replaced MeleeOfficerV2
+    Dog 
 }
 
 [System.Serializable]
@@ -29,7 +29,7 @@ public class UnitDefinitions : MonoBehaviour
     public GameObject meleeOfficerV1Prefab;
     public GameObject tankOfficerPrefab;
     public GameObject rangedOfficerPrefab;
-    public GameObject dogPrefab;  // Replaced MeleeOfficerV2
+    public GameObject dogPrefab;  
     
     void Awake()
     {

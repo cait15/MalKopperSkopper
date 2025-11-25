@@ -2403,7 +2403,7 @@ MonoBehaviour:
   fullscreenToggle: {fileID: 1704267439}
   guidePanelAnimator: {fileID: 19772362}
   settingsPanelAnimator: {fileID: 1747465312}
-  audioSource: {fileID: 2031093096}
+  audioSource: {fileID: 2031093098}
   mainMenuDeactivationDelay: 0.4
 --- !u!114 &2031093091
 MonoBehaviour:
@@ -3111,6 +3111,14 @@ PrefabInstance:
     - target: {fileID: 3805573925919342663, guid: ad40069aa76bea64ebf6ea8ca2e44dfd, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4567363869095869547, guid: ad40069aa76bea64ebf6ea8ca2e44dfd, type: 3}
+      propertyPath: m_fontSize
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4567363869095869547, guid: ad40069aa76bea64ebf6ea8ca2e44dfd, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5156241996425560817, guid: ad40069aa76bea64ebf6ea8ca2e44dfd, type: 3}
       propertyPath: m_Pivot.x

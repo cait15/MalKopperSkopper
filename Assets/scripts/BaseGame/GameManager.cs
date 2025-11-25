@@ -215,7 +215,6 @@ public class GameManager : MonoBehaviour
 
         if (EnemySpawner.Instance != null)
         {
-            //WaveConfiguration waveconfig = new WaveConfiguration(currentWave, 5 + (currentWave*2),0.5f);
             EnemySpawner.Instance.StartWave(currentWave);
         }
 
