@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2da890fac7ad5e4486ef666036e28ca, type: 3}
+  m_Name: DialogueChoice
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueChoice
+  choiceText: '"What.... Now?"'
+  nextNode: {fileID: 11400000, guid: ac82fee8bef401242871a42ebc013ba0, type: 2}
+  isEndDialogue: 0

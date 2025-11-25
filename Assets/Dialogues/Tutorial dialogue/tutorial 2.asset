@@ -12,12 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec02e0ab42e53de4b9785d62f88c63fa, type: 3}
   m_Name: tutorial 2
   m_EditorClassIdentifier: Assembly-CSharp::DialogueNode
-  dialogueText: 'This game here, is to showcase how copper theft is caused by lack
-    of affordable infrastructure. '
+  dialogueText: This game here, is to showcase how copper theft is caused by lack
+    of affordable infrastructure. That some people may resort to crime to ensure
+    their needs are met.
   characterName: Chief
   choices: []
   nextDefaultNode: {fileID: 11400000, guid: 80a385c15d8247c4483770b35365a0d8, type: 2}
   animatedSprites:
   - {fileID: 21300000, guid: a3e7caae1ba990a439f4a512fc994967, type: 3}
   animationSpeed: 0.75
+  nodeAudio: {fileID: 0}
   isEndDialogue: 0

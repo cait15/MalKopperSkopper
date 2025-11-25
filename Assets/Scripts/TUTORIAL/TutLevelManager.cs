@@ -178,7 +178,7 @@ public class TutorialLevelManager : MonoBehaviour
                 UiText.SetActive(false);
                 hotBar.SetActive(true);
                 currentStep = TutorialStep.PlaceFirstUnit;
-                ShowTutorialMessage("Now let's place your first unit!\n\nClick on a blue placement spot on the ground to place a unit.");
+                ShowTutorialMessage("Now let's place your first unit!\n\nClick on a blue placement spot on the ground to place a unit.\n\n If you want more info on your units, click the info button");
                 break;
             
             case TutorialStep.PlaceFirstUnit:
@@ -193,8 +193,9 @@ public class TutorialLevelManager : MonoBehaviour
                 break;
                 
             case TutorialStep.WaitForBattle:
+                hotBar.SetActive(false);
                 currentStep = TutorialStep.BattleInProgress;
-                ShowTutorialMessage("Battle started!\n\nEnemies are coming. Your units will automatically attack them. Defend your tower!");
+                ShowTutorialMessage("Battle started!\n\nEnemies are coming from the red particles. Your units will automatically attack them. Defend your tower!");
                 break;
                 
             case TutorialStep.BattleInProgress:

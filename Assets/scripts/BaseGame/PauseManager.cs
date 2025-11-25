@@ -5,6 +5,7 @@ public class PauseManager : MonoBehaviour
 {
     public GameObject pausePanel;
     public GameObject optionsPanel;
+    private bool isOptionsOpen = false;
 
     void Start()
     {
@@ -40,7 +41,16 @@ public class PauseManager : MonoBehaviour
     public void OpenOptions()
     {
         optionsPanel.SetActive(true);
+        isOptionsOpen = true;
        UnityEngine.Debug.Log("Options Opened");
+    }
+
+    public void CloseOptions()
+    {
+        if (isOptionsOpen)
+        {
+            optionsPanel.SetActive(false);
+        }
     }
 
     public void ExitToMainMenu()
