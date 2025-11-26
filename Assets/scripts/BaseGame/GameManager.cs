@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     public int playerMoney = 3589;
     public bool isGameOver = false;
 
-    [Header("Wave Settings")] public int totalWaves = 10;
+    [Header("Wave Settings")] public int totalWaves = 1;
     public float setupPhaseDuration = 30f;
     public float victoryPhaseDuration = 5f;
     
@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
     private float phaseTimer = 0f;
     private bool waveInProgress = false;
     private bool waitingForDialogue = false;
+    private bool hasGameEnded = false;
     
     public delegate void OnDamageTrigger();
     public static event OnDamageTrigger OnDamagedTriggered;
@@ -61,7 +62,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         InitializeGame();
-        gameoverText.SetActive(false);
+//        gameoverText.SetActive(false);
     }
 
     void Update()
@@ -132,6 +133,7 @@ public class GameManager : MonoBehaviour
         unlockedUnits.Clear();
         currentWave = 0;
         isGameOver = false;
+        hasGameEnded = false;
         currentPhase = GamePhase.Dialogue;
 
         unlockedUnits.Add(UnitType.MeleeOfficerV1);
@@ -251,7 +253,7 @@ public class GameManager : MonoBehaviour
                 }
                 break;
                 
-            case 6:
+            case 4:
                 if (!unlockedUnits.Contains(UnitType.Dog))
                 {
                     unlockedUnits.Add(UnitType.Dog);
@@ -301,7 +303,7 @@ public class GameManager : MonoBehaviour
     {
         phaseTimer -= Time.deltaTime;
 
-        if (phaseTimer <= 0)
+        if (phaseTimer <= 0 && !hasGameEnded)
         {
             if (currentWave < totalWaves)
             {
@@ -329,13 +331,16 @@ public class GameManager : MonoBehaviour
 
     void GameOver()
     {
+        if (hasGameEnded) return;
+        hasGameEnded = true;
+        
         isGameOver = true;
         currentPhase = GamePhase.Defeat;
-        gameoverText.SetActive(true);
+      
         if (gameOverText != null)
         {
-            gameOverText.gameObject.SetActive(true);
-            gameOverText.text = "GAME OVER";
+         
+          
         }
 
         Debug.Log("=== GAME OVER ===");
@@ -354,6 +359,9 @@ public class GameManager : MonoBehaviour
 
     void GameWon()
     {
+        if (hasGameEnded) return;
+        hasGameEnded = true;
+        
         Debug.Log("=== ULTIMATE VICTORY ===");
         Debug.Log($"All {totalWaves} waves completed! Tower health: {playerHealth}");
         currentPhase = GamePhase.Victory;

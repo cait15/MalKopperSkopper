@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -46,6 +47,7 @@ public class DialogueManager : MonoBehaviour
     private Coroutine iconAnimationCoroutine;
     private bool isTyping = false;
     private bool isTutorial = false;
+    private bool isEndgameDialogue = false;
     
     void Awake()
     {
@@ -78,6 +80,7 @@ public class DialogueManager : MonoBehaviour
         if (dialogues != null && dialogues.Count > 0)
         {
             DialogueNode startNode = dialogues[0];
+            isEndgameDialogue = false;
             DisplayNode(startNode);
         }
         else
@@ -90,6 +93,7 @@ public class DialogueManager : MonoBehaviour
     
     public void ShowVictoryDialogue()
     {
+        isEndgameDialogue = true;
         if (victoryDialogues != null && victoryDialogues.Count > 0)
         {
             DisplayNode(victoryDialogues[0]);
@@ -98,6 +102,7 @@ public class DialogueManager : MonoBehaviour
     
     public void ShowDefeatDialogue()
     {
+        isEndgameDialogue = true;
         if (defeatDialogues != null && defeatDialogues.Count > 0)
         {
             DisplayNode(defeatDialogues[0]);
@@ -309,10 +314,15 @@ public class DialogueManager : MonoBehaviour
     
     void OnDialogueEnd()
     {
-        // Don't close the panel immediately in tutorial - let it stay visible
-        // Just trigger the next phase
+        // Check if this is an endgame dialogue (victory/defeat)
+        if (isEndgameDialogue)
+        {
+            isEndgameDialogue = false;
+            StartCoroutine(LoadHomeAfterDelay(1f));
+            return;
+        }
         
-        // Check if tutorial or regular game
+        // Regular wave dialogue - transition to next phase
         if (isTutorial)
         {
             if (TutGameManager.Instance != null)
@@ -322,12 +332,17 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
-            CloseDialogue();
             if (GameManager.Instance != null)
             {
                 GameManager.Instance.OnDialogueEnded();
             }
         }
+    }
+    
+    IEnumerator LoadHomeAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SceneManager.LoadScene("Main Screen"); // Change "MainMenu" to your home scene name
     }
     
     public bool IsDialogueActive()

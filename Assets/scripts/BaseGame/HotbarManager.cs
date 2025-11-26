@@ -185,6 +185,7 @@ public class HotbarUI : MonoBehaviour
     
     void ApplyAttackBuff(System.Collections.Generic.List<OfficerUnit> units)
     {
+        GameManager.Instance.SpendMoney(500);
         foreach (OfficerUnit unit in units)
         {
             if (unit != null && unit.isAlive)
@@ -197,6 +198,7 @@ public class HotbarUI : MonoBehaviour
     
     void ApplyHealBuff(System.Collections.Generic.List<OfficerUnit> units)
     {
+        GameManager.Instance.SpendMoney(1000);
         foreach (OfficerUnit unit in units)
         {
             if (unit != null && unit.isAlive)

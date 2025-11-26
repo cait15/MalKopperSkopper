@@ -818,7 +818,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &828344617
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2074,8 +2074,8 @@ MonoBehaviour:
   moneyText: {fileID: 1735150009097813157}
   waveText: {fileID: 1808299346297728611}
   phaseText: {fileID: 7199036436646117303}
-  gameOverText: {fileID: 8912706296528914865}
-  gameoverText: {fileID: 828344616}
+  gameOverText: {fileID: 0}
+  gameoverText: {fileID: 0}
   hotbarUI: {fileID: 1381066516}
 --- !u!4 &1727352320
 Transform:
